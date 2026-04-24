@@ -1,23 +1,21 @@
 """
-models/upper_level.py
----------------------
-SEPTA's optimization — now indexed over 61 time slots (15-min, 6am–9pm).
+src/septa_worldcup/v1/models/upper_level.py
+--------------------------------------------
+SEPTA Regional Rail profit optimization over 40 time slots (15-min, 18:00–04:00+1).
 
-VARIABLE COUNT:
-  f[l, t] : 12 lines × 61 slots = 732  (integer — trains dispatched)
-  p[l, t] : 12 × 61 = 732              (continuous — fare per slot)
-  x[l, t] : 12 × 61 = 732              (continuous — pax served)
-  Total: 2,196 variables
+VARIABLE COUNT (active baseline):
+  f[l, t] : 13 lines × 40 slots = 520  (integer — trains dispatched)
+  p[l, t] : 13 × 40 = 520              (continuous — fare per slot)
+  x[l, t] : 13 × 40 = 520              (continuous — pax served)
+  Total: 1,560 variables
 
-FORMULATION (full):
+HISTORICAL NOTE: original v1 used 12 lines × 61 slots (6am–9pm). Active
+  baseline is now 13 lines × 40 slots (18:00–04:00+1), matching v2's window.
+
+FORMULATION:
   Sets:
-    L  — 12 Regional Rail lines
-    T  — 61 time slots, t ∈ {6.00, 6.25, ..., 21.00}
-
-  Decision variables:
-    f[l,t] ∈ ℤ⁺          trains dispatched on line l at slot t
-    p[l,t] ∈ ℝ⁺          fare on line l at slot t
-    x[l,t] ∈ ℝ⁺          passengers served on line l at slot t
+    L  — 13 Regional Rail lines
+    T  — 40 time slots (18:00, 18:15, …, 23:45, 00:00+1, …, 03:45+1)
 
   Objective:
     max  Π = Σ_{l,t} p[l,t]·x[l,t]
@@ -28,42 +26,39 @@ FORMULATION (full):
     C1  x[l,t] ≤ C · f[l,t]                   ∀ l,t   capacity
     C2  x[l,t] ≤ d[l,t]                        ∀ l,t   demand cap
     C3  Σ_{l,t} c_f·f[l,t] ≤ B                        budget
-    C4  f[l,t] ≥ 1  for peak slots             ∀ l     min service
-        f[l,t] ≥ 0  for off-peak slots (may skip)
     C5  x[l,t] ≥ ε·d[l,t]                     ∀ l,t   equity
     C6  p̄[l] ≤ p[l,t] ≤ σ·p̄[l]              ∀ l,t   fare bounds
-    C7  p[l,t] ≥ p[l,t−1] − Δp_max            ∀ l,t   fare smoothness
-        (fare can't jump more than $1 between consecutive slots)
-    C8  f[l,t] ∈ ℤ⁺                            ∀ l,t   integrality
+    C7  |p[l,t] − p[l,t−1]| ≤ $1             ∀ l,t   fare smoothness
+    (C4 min-service dropped — jointly infeasible with C3 at $350K budget)
 """
 
 import numpy as np
 from scipy.optimize import minimize
 
-from data.network import LINES
-from data.parameters import (
-    TIME_SLOTS, N_SLOTS, SLOT_DURATION_MIN,
+from septa_worldcup.v1.data.network import LINES
+from septa_worldcup.v1.data.parameters import (
+    N_SLOTS, SLOT_DURATION_MIN,
     TRAIN_CAPACITY, FIXED_COST_PER_TRAIN, VARIABLE_COST_PER_PAX,
     DAILY_BUDGET_EVENT, EQUITY_EPSILON,
     FARE_MIN, FARE_MAX, SURGE_FACTOR,
     MIN_TRAINS_PER_SLOT, MAX_TRAINS_PER_SLOT,
-    IDX_9AM, IDX_4PM, IDX_7PM,
+    IDX_2030, IDX_2230, IDX_0130,
+    TBLOCK_NAMES, TBLOCK_RANGES_V1,
     is_peak,
 )
 
 LNAMES = list(LINES.keys())
-L      = len(LNAMES)          # 12
-T      = N_SLOTS              # 61
-N      = L * T                # 732 — total (line, slot) pairs
+L      = len(LNAMES)          # 13
+T      = N_SLOTS              # 40
+N      = L * T                # 520 — total (line, slot) pairs
 
-# Named 4-block aggregation (matches sensitivity.py parametrization)
-TBLOCKS = ["morning", "midday", "evening", "night"]
-TBLOCK_RANGES = {
-    "morning": range(0,       IDX_9AM),   # slots  0–11  (6am–9am)
-    "midday":  range(IDX_9AM, IDX_4PM),   # slots 12–39  (9am–4pm)
-    "evening": range(IDX_4PM, IDX_7PM),   # slots 40–51  (4pm–7pm)
-    "night":   range(IDX_7PM, T),         # slots 52–60  (7pm–9pm)
-}
+# Named 4-block aggregation for the 18:00–04:00 event window
+# pre_game:  slots  0–9   (18:00–20:15)
+# in_game:   slots 10–17  (20:30–22:15)
+# post_game: slots 18–29  (22:30–01:15+1)
+# late_night:slots 30–39  (01:30–03:45+1)
+TBLOCKS      = TBLOCK_NAMES
+TBLOCK_RANGES = TBLOCK_RANGES_V1
 
 _lidx = {l: i for i, l in enumerate(LNAMES)}
 
@@ -75,17 +70,15 @@ def idx(l_name: str, t_i: int) -> int:
 def solve(demand: dict, budget: float = DAILY_BUDGET_EVENT,
           solver: str = "scipy") -> dict:
     """
-    Solve upper-level optimization over 61 time slots × 12 lines.
+    Solve upper-level optimization over 40 time slots × 13 lines (18:00–04:00).
 
     Args:
-        demand : dict[line] → np.array shape (61,)
+        demand : dict[line] → np.array shape (40,)
         budget : operating budget cap
         solver : 'scipy' | 'pulp' | 'gurobi'
 
     Returns:
-        result dict:
-          f[l][t_idx], p[l][t_idx], x[l][t_idx]  — optimal decisions
-          profit, revenue, fixed_cost, var_cost, total_pax
+        result dict with f[l][t_idx], p[l][t_idx], x[l][t_idx] and aggregate metrics.
     """
     # Flatten demand into vector d[l*T + t]
     d_vec = np.array([demand[l][t] for l in LNAMES for t in range(T)])
@@ -196,7 +189,7 @@ def _parse_result(xv, d_vec, f_min, neg_profit_val, success):
     result = {"lines": {}}
     for i, l in enumerate(LNAMES):
         result["lines"][l] = {
-            "f": f_opt[i*T:(i+1)*T],   # np.array shape (61,)
+            "f": f_opt[i*T:(i+1)*T],   # np.array shape (40,)
             "p": p_opt[i*T:(i+1)*T],
             "x": x_opt[i*T:(i+1)*T],
             "d": d_vec[i*T:(i+1)*T],

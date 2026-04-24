@@ -1,17 +1,17 @@
 """
-models/bilevel.py
------------------
-Bilevel solver over 61 time slots × 12 lines.
+src/septa_worldcup/v1/models/bilevel.py
+----------------------------------------
+Bilevel solver over 40 time slots × 13 lines (18:00–04:00 event window).
 """
 
 import numpy as np
-from data.network import LINES
-from data.parameters import (
-    TIME_SLOTS, N_SLOTS, SLOT_DURATION_MIN,
+from septa_worldcup.v1.data.network import LINES
+from septa_worldcup.v1.data.parameters import (
+    N_SLOTS, SLOT_DURATION_MIN,
     TRAIN_CAPACITY, DAILY_BUDGET_EVENT,
 )
-from models.upper_level import LNAMES, T, solve as upper_solve
-from models.lower_level import effective_demand
+from septa_worldcup.v1.models.upper_level import LNAMES, T, solve as upper_solve
+from septa_worldcup.v1.models.lower_level import effective_demand
 
 
 def run_bilevel(demand: dict, max_iter: int = 40,
@@ -20,7 +20,7 @@ def run_bilevel(demand: dict, max_iter: int = 40,
     """
     Iterative best-response bilevel solver.
 
-    demand: dict[line] → np.array shape (61,)  ← per-slot demand
+    demand: dict[line] → np.array shape (40,)  ← per-slot demand
     """
     eff_demand = {l: d.copy() for l, d in demand.items()}
     total_raw  = sum(demand[l].sum() for l in LNAMES)

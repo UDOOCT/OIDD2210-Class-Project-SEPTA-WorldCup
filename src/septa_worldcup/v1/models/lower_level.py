@@ -25,7 +25,7 @@ VALIDITY:
 from __future__ import annotations
 from typing import List
 import numpy as np
-from data.parameters import (
+from septa_worldcup.v1.data.parameters import (
     LOGIT_ALPHA_FARE, LOGIT_ALPHA_WAIT, LOGIT_ALPHA_TRAVEL,
     LOGIT_THETA, LOGIT_NO_TRAVEL_U, TRAIN_CAPACITY,
 )

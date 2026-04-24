@@ -10,23 +10,23 @@ The project has two optimization layers sharing a common data foundation:
 
 **Layer 1 — Regional Rail (v1, `main.py`)**
 ```
-data/demand.py          →  Bimodal base demand + WC overlay + Monte Carlo
-models/upper_level.py   →  Upper-level: SEPTA profit-maximization (SLSQP)
-models/lower_level.py   →  Lower-level: passenger Multinomial Logit
-models/bilevel.py       →  Iterative best-response bilevel solver
-_run_optimization.py    →  Greedy integer allocator with elastic demand
-_run_ilp_comparison.py  →  Multiple-choice knapsack ILP (PuLP/CBC)
-models/sensitivity.py   →  Stochastic sensitivity search (Optuna TPE)
+src/septa_worldcup/v1/data/demand.py         →  Bimodal base demand + WC overlay + Monte Carlo
+src/septa_worldcup/v1/models/upper_level.py  →  Upper-level: SEPTA profit-maximization (SLSQP)
+src/septa_worldcup/v1/models/lower_level.py  →  Lower-level: passenger Multinomial Logit
+src/septa_worldcup/v1/models/bilevel.py      →  Iterative best-response bilevel solver
+_run_optimization.py                          →  Greedy integer allocator with elastic demand
+_run_ilp_comparison.py                        →  Multiple-choice knapsack ILP (PuLP/CBC)
+src/septa_worldcup/v1/models/sensitivity.py  →  Stochastic sensitivity search (Optuna TPE)
 ```
 
 **Layer 2 — Multimodal extension (`run_scenarios.py`)**
 ```
-data/scenario.py          →  Master config: 18:00–04:00 window, all parameters
-data/worldcup_demand.py   →  Demand model: pre-game, in-game, post-game
-data/bsl.py               →  BSL/B Line capacity model (NRG Station)
-models/policy_objective.py →  Policy objective + greedy RR evaluator
-reporting.py              →  KPI computation, display, and CSV export
-run_scenarios.py          →  8-scenario comparison runner
+src/septa_worldcup/v2/config/scenario.py        →  Master config: 18:00–04:00 window, all parameters
+src/septa_worldcup/v2/data/worldcup_demand.py   →  Demand model: pre-game, in-game, post-game
+src/septa_worldcup/v2/data/bsl.py               →  BSL/B Line capacity model (NRG Station)
+src/septa_worldcup/v2/models/policy_objective.py →  Policy objective + greedy RR evaluator
+src/septa_worldcup/v2/reporting/reporting.py     →  KPI computation, display, and CSV export
+run_scenarios.py                                  →  8-scenario comparison runner
 ```
 
 ---

@@ -21,7 +21,8 @@ Part 3 — Greedy quality assessment
 """
 
 import sys, time
-sys.path.insert(0, '.')
+from pathlib import Path
+sys.path.insert(0, str(Path(__file__).parent / "src"))
 
 import numpy as np
 from scipy.optimize import minimize_scalar
@@ -32,9 +33,9 @@ except ImportError:
     print("PuLP not installed.  Run:  pip install pulp")
     sys.exit(1)
 
-from data.demand import get_total_demand
-from data.network import LINES
-from data.parameters import (
+from septa_worldcup.v1.data.demand import get_total_demand
+from septa_worldcup.v1.data.network import LINES
+from septa_worldcup.v1.data.parameters import (
     TIME_SLOTS, slot_label,
     TRAIN_CAPACITY, FIXED_COST_PER_TRAIN, VARIABLE_COST_PER_PAX,
     DAILY_BUDGET_EVENT, EQUITY_EPSILON,
@@ -42,7 +43,7 @@ from data.parameters import (
     LOGIT_ALPHA_FARE, LOGIT_ALPHA_WAIT, LOGIT_ALPHA_TRAVEL,
     LOGIT_THETA, LOGIT_NO_TRAVEL_U,
 )
-from models.upper_level import LNAMES, T
+from septa_worldcup.v1.models.upper_level import LNAMES, T
 
 # ── Constants (must mirror _run_optimization.py exactly) ──────────────────────
 WC_DRIVE_PENALTY = 3.5

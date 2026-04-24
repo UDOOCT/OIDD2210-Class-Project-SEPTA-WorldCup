@@ -7,8 +7,10 @@
 
 This project models SEPTA's multimodal transit challenge for World Cup 2026 match day (Brazil vs. Haiti, June 19 2026, Lincoln Financial Field). It combines two layers:
 
-**Layer 1 — Regional Rail (v1 baseline, preserved):**
-Bilevel network optimization over 13 lines × 61 slots (6am–9pm, 15-min). SEPTA maximizes profit by choosing integer train frequencies and fares; passengers respond via Multinomial Logit. Solved via SLSQP continuous relaxation with iterative best-response.
+**Layer 1 — Regional Rail (v1 baseline):**
+Bilevel network optimization over 13 lines × 40 slots (18:00–04:00+1, 15-min). SEPTA maximizes profit by choosing integer train frequencies and fares; passengers respond via Multinomial Logit with World Cup parking penalty. Solved via SLSQP continuous relaxation with iterative best-response.
+
+*Historical note: the original v1 used 6am–9pm (61 slots). The active baseline now aligns with v2 at 18:00–04:00+1 for time-window consistency.*
 
 **Layer 2 — Multimodal extension (new):**
 Full 18:00–04:00 match-day window (40 slots × 15 min, crossing midnight). Models Regional Rail as a feeder system and the Broad Street Line (BSL/B Line) as the primary link to NRG Station. Policy objective minimizes operating deficit plus social-cost penalties for unmet demand, crowding, equity failures, and clearance delay. Eight scenarios stress-test the system.
@@ -19,35 +21,38 @@ Full 18:00–04:00 match-day window (40 slots × 15 min, crossing midnight). Mod
 
 ```
 septa_worldcup/
-├── data/
-│   ├── scenario.py             ← Master config: 18:00–04:00 window, all model parameters
-│   ├── worldcup_demand.py      ← Demand model: pre-game, in-game, post-game evacuation
-│   ├── bsl.py                  ← BSL/B Line capacity model (NRG Station)
-│   ├── network.py              ← 13 RR lines from SEPTA GTFS (stations, travel times)
-│   ├── demand.py               ← Bimodal base demand + WC overlay + Monte Carlo (v1)
-│   ├── parameters.py           ← Cost, fleet, fare, and logit parameters (v1)
-│   ├── gtfs/                   ← SEPTA GTFS v202603296 (stop_times, trips, routes, stops)
-│   ├── ridership/              ← FY2024 APC weekday boardings by line and station
-│   └── costs/                  ← Route operating statistics (cost_summary.json)
-├── models/
-│   ├── policy_objective.py     ← Policy objective + greedy RR allocator (new)
-│   ├── upper_level.py          ← SLSQP upper-level solver (v1, 13×61 slots)
-│   ├── lower_level.py          ← Multinomial Logit passenger route choice (v1)
-│   ├── bilevel.py              ← Iterative best-response bilevel solver (v1)
-│   └── sensitivity.py          ← Optuna TPE stochastic search (v1)
-├── reporting.py                ← KPI computation, terminal display, CSV export (new)
-├── run_scenarios.py            ← 8-scenario comparison runner (new)
-├── utils/
-│   ├── network_builder.py      ← NetworkX multi-line graph construction
-│   └── visualize.py            ← Demand curves, allocation heatmap, fare profiles
-├── outputs/                    ← Generated CSVs and plots (auto-created)
-├── notebooks/
-│   └── demo.ipynb              ← End-to-end walkthrough (v1)
-├── _run_optimization.py        ← Greedy integer allocation with elastic Logit demand (v1)
-├── _run_ilp_comparison.py      ← Multiple-choice knapsack ILP via PuLP/CBC (v1)
-├── main.py                     ← Entry point: v1 bilevel pipeline
-├── formulation.md              ← Full mathematical formulation
-└── README.md
+├── src/septa_worldcup/
+│   ├── v1/                     ← Regional Rail profit model (18:00–04:00, 40 slots)
+│   │   ├── data/network.py     ← 13 RR lines from SEPTA GTFS
+│   │   ├── data/parameters.py  ← Cost, fleet, fare, Logit parameters
+│   │   ├── data/demand.py      ← Event-window demand (pre-game + post-game + baseline)
+│   │   ├── models/upper_level.py ← SLSQP solver (13×40 slots)
+│   │   ├── models/lower_level.py ← Multinomial Logit passenger route choice
+│   │   ├── models/bilevel.py   ← Iterative best-response bilevel solver
+│   │   └── models/sensitivity.py ← Optuna TPE stochastic search
+│   ├── v2/                     ← Multimodal policy model (18:00–04:00, 40 slots)
+│   │   ├── config/scenario.py  ← Master config: all parameters
+│   │   ├── data/worldcup_demand.py ← Demand: pre-game, in-game, post-game
+│   │   ├── data/bsl.py         ← BSL/B Line capacity model (NRG Station)
+│   │   ├── models/policy_objective.py ← Policy objective + greedy RR allocator
+│   │   └── reporting/reporting.py ← KPI computation, display, CSV export
+│   └── common/
+│       ├── network_builder.py  ← NetworkX multi-line graph
+│       └── plotting.py         ← Demand curves, allocation heatmap
+├── data/                       ← Raw data assets (GTFS, ridership CSV, cost JSON)
+│   ├── gtfs/                   ← SEPTA GTFS v202603296
+│   ├── ridership/              ← FY2024 APC weekday boardings
+│   └── costs/                  ← Route operating statistics
+├── docs/                       ← Documentation
+├── scripts/                    ← CLI wrappers
+├── outputs/
+│   ├── tables/                 ← CSV results
+│   └── validation/             ← Audit reports
+├── _run_optimization.py        ← v1 greedy integer allocation (entry point)
+├── _run_ilp_comparison.py      ← v1 ILP comparison via PuLP/CBC
+├── run_scenarios.py            ← v2 eight-scenario comparison runner
+├── main.py                     ← v1 bilevel pipeline entry point
+└── formulation.md              ← Mathematical formulation index
 ```
 
 ---

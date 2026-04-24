@@ -1,51 +1,49 @@
 """
-models/sensitivity.py
----------------------
-OptQuest equivalent — Optuna TPE search over 61 time slots × 12 lines.
+src/septa_worldcup/v1/models/sensitivity.py
+--------------------------------------------
+Optuna TPE stochastic sensitivity search over 40 time slots × 13 lines (18:00–04:00).
 
-Policy parametrization (keeps search space tractable):
-  Instead of searching 61×12=732 fare values independently,
-  we parametrize with 4 numbers that define a piecewise fare curve:
-    fare_morning : fare during morning rush  (6–9am, slots 0–11)
-    fare_midday  : fare during midday        (9am–4pm, slots 12–39)
-    fare_evening : fare during evening rush  (4–7pm, slots 40–51)
-    fare_night   : fare during night         (7–9pm, slots 52–60)
-  Similarly for frequency: freq_morning, freq_midday, freq_evening, freq_night.
+Policy parametrization — 4 event-window blocks:
+  fare_pre_game  : 18:00–20:15  (slots  0–9)
+  fare_in_game   : 20:30–22:15  (slots 10–17)
+  fare_post_game : 22:30–01:15  (slots 18–29)
+  fare_late_night: 01:30–03:45  (slots 30–39)
+  Similarly for frequency: freq_pre_game, freq_in_game, etc.
 
-  This is the 4-block structure from your proposal, used as the
-  policy parametrization for the stochastic search.
-  The full 61-slot model then inherits these values per block.
+HISTORICAL NOTE: original v1 used morning/midday/evening/night blocks over
+  61 slots (6am–9pm). Active baseline now uses event-window blocks.
 """
 
 import numpy as np
 import pandas as pd
 
-from data.demand import get_total_demand, monte_carlo_demand
-from data.network import LINES
-from data.parameters import (
-    TIME_SLOTS, N_SLOTS, SLOT_DURATION_MIN,
+from septa_worldcup.v1.data.demand import get_total_demand, monte_carlo_demand
+from septa_worldcup.v1.data.network import LINES
+from septa_worldcup.v1.data.parameters import (
+    N_SLOTS, SLOT_DURATION_MIN,
     TRAIN_CAPACITY, FIXED_COST_PER_TRAIN, VARIABLE_COST_PER_PAX,
     DAILY_BUDGET_EVENT, EQUITY_EPSILON,
     FARE_MIN, FARE_MAX,
-    IDX_9AM, IDX_4PM, IDX_7PM,
+    IDX_2030, IDX_2230, IDX_0130,
+    TBLOCK_RANGES_V1,
 )
-from models.lower_level import effective_demand
+from septa_worldcup.v1.models.lower_level import effective_demand
 
 LNAMES = list(LINES.keys())
-T      = N_SLOTS  # 61
+T      = N_SLOTS  # 40
 
-# Slot-to-block mapping
+# Slot-to-block mapping for the 18:00–04:00 event window
 def _block_of(t_idx: int) -> str:
-    if t_idx < IDX_9AM:  return "morning"
-    if t_idx < IDX_4PM:  return "midday"
-    if t_idx < IDX_7PM:  return "evening"
-    return "night"
+    if t_idx < IDX_2030:   return "pre_game"
+    if t_idx < IDX_2230:   return "in_game"
+    if t_idx < IDX_0130:   return "post_game"
+    return "late_night"
 
 
 def policy_to_arrays(policy: dict) -> tuple:
     """
-    Expand 4-block policy dict into per-slot arrays (length 61 each).
-    Returns (fare_arr, freq_arr) each shape (61,).
+    Expand 4-block policy dict into per-slot arrays (length 40 each).
+    Returns (fare_arr, freq_arr) each shape (40,).
     """
     fare_arr = np.array([policy[f"fare_{_block_of(t)}"] for t in range(T)])
     freq_arr = np.array([policy[f"freq_{_block_of(t)}"] for t in range(T)], dtype=float)
@@ -98,23 +96,23 @@ def run_sensitivity(n_trials: int = 200, n_mc_samples: int = 100,
     mc_scenarios = monte_carlo_demand(n_samples=n_mc_samples, seed=seed)
 
     def objective(trial):
-        # 4-block fare policy (monotone: evening ≥ midday, morning ≥ midday)
-        fare_mid  = trial.suggest_float("fare_midday",  FARE_MIN, 5.00)
-        fare_morn = trial.suggest_float("fare_morning", fare_mid, FARE_MAX)
-        fare_eve  = trial.suggest_float("fare_evening", fare_mid, FARE_MAX)
-        fare_ngt  = trial.suggest_float("fare_night",   FARE_MIN, fare_eve)
+        # 4-block fare policy for event window (post_game ≥ in_game)
+        fare_in   = trial.suggest_float("fare_in_game",    FARE_MIN, 5.00)
+        fare_pre  = trial.suggest_float("fare_pre_game",   fare_in,  FARE_MAX)
+        fare_post = trial.suggest_float("fare_post_game",  fare_in,  FARE_MAX)
+        fare_ln   = trial.suggest_float("fare_late_night", FARE_MIN, fare_post)
 
         # 4-block frequency policy
-        freq_mid  = trial.suggest_int("freq_midday",  1, 4)
-        freq_morn = trial.suggest_int("freq_morning", freq_mid, 8)
-        freq_eve  = trial.suggest_int("freq_evening", freq_mid, 8)
-        freq_ngt  = trial.suggest_int("freq_night",   1, freq_eve)
+        freq_in   = trial.suggest_int("freq_in_game",    1, 4)
+        freq_pre  = trial.suggest_int("freq_pre_game",   freq_in, 8)
+        freq_post = trial.suggest_int("freq_post_game",  freq_in, 8)
+        freq_ln   = trial.suggest_int("freq_late_night", 1, freq_post)
 
         policy = {
-            "fare_morning": fare_morn, "fare_midday": fare_mid,
-            "fare_evening": fare_eve,  "fare_night":  fare_ngt,
-            "freq_morning": freq_morn, "freq_midday": freq_mid,
-            "freq_evening": freq_eve,  "freq_night":  freq_ngt,
+            "fare_pre_game":   fare_pre,  "fare_in_game":    fare_in,
+            "fare_post_game":  fare_post, "fare_late_night": fare_ln,
+            "freq_pre_game":   freq_pre,  "freq_in_game":    freq_in,
+            "freq_post_game":  freq_post, "freq_late_night": freq_ln,
         }
 
         profits, equity_rates = [], []

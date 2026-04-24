@@ -32,11 +32,15 @@ import copy
 import types
 import numpy as np
 
-import data.scenario as SC
-from data.worldcup_demand import get_demand
-from data.bsl import allocate_bsl_service
-from models.policy_objective import evaluate_rr_service, multimodal_policy_objective
-from reporting import compute_kpis, print_kpi_report, print_scenario_comparison, save_comparison_csv
+import sys
+from pathlib import Path
+sys.path.insert(0, str(Path(__file__).parent / "src"))
+
+import septa_worldcup.v2.config.scenario as SC
+from septa_worldcup.v2.data.worldcup_demand import get_demand
+from septa_worldcup.v2.data.bsl import allocate_bsl_service
+from septa_worldcup.v2.models.policy_objective import evaluate_rr_service, multimodal_policy_objective
+from septa_worldcup.v2.reporting.reporting import compute_kpis, print_kpi_report, print_scenario_comparison, save_comparison_csv
 
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -309,7 +313,7 @@ def main():
     print_scenario_comparison(all_kpis)
 
     if args.save_csv:
-        save_comparison_csv(all_kpis, "outputs/scenario_comparison.csv")
+        save_comparison_csv(all_kpis, "outputs/tables/scenario_comparison.csv")
 
 
 if __name__ == "__main__":

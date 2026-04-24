@@ -17,7 +17,7 @@ GRAPH STRUCTURE:
 
 import networkx as nx
 from collections import defaultdict
-from data.network import LINES, CENTER_CITY_STATIONS
+from septa_worldcup.v1.data.network import LINES, CENTER_CITY_STATIONS
 
 
 def build_network() -> tuple[nx.DiGraph, dict]:

@@ -37,7 +37,7 @@ import numpy as np
 from typing import Dict, Any
 
 # Import scenario defaults; callers can override by passing a scenario_cfg dict.
-import data.scenario as SC
+import septa_worldcup.v2.config.scenario as SC
 
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -92,7 +92,7 @@ def evaluate_rr_service(
 
     Returns dict with per-line arrays and aggregate financial metrics.
     """
-    from data.scenario import (
+    from septa_worldcup.v2.config.scenario import (
         N_SLOTS, RR_BASELINE_TRAINS_EVENING, RR_BASELINE_TRAINS_LATENIGHT,
         RR_FIXED_COST_PER_TRAIN_TRIP, RR_VAR_COST_PER_PAX,
         TRAIN_CAPACITY_RR, RR_EVENING_END_SLOT, SLOT_MINUTES,
@@ -261,7 +261,7 @@ def multimodal_policy_objective(
     objective     = net_deficit + total_penalty
 
     # ── KPI: late-night unmet demand (post-midnight) ──────────────────────────
-    from data.scenario import time_to_slot
+    from septa_worldcup.v2.config.scenario import time_to_slot
     midnight_slot  = time_to_slot("00:00")
     bsl_unmet_arr  = bsl_result.get("unmet_outbound", np.zeros(1))
     latenight_unmet = float(bsl_unmet_arr[midnight_slot:].sum())

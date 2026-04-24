@@ -12,11 +12,15 @@ Usage:
 
 import argparse
 import os
+import sys
+from pathlib import Path
+sys.path.insert(0, str(Path(__file__).parent / "src"))
+
 import numpy as np
-from data.demand import get_total_demand
-from models.upper_level import solve as upper_solve, LNAMES, TBLOCKS, TBLOCK_RANGES
-from models.bilevel import run_bilevel
-from models.sensitivity import run_sensitivity
+from septa_worldcup.v1.data.demand import get_total_demand
+from septa_worldcup.v1.models.upper_level import solve as upper_solve, LNAMES, TBLOCKS, TBLOCK_RANGES
+from septa_worldcup.v1.models.bilevel import run_bilevel
+from septa_worldcup.v1.models.sensitivity import run_sensitivity
 
 
 def print_results(result: dict):
@@ -78,11 +82,11 @@ def main():
         print("\nRunning sensitivity analysis (Optuna TPE, 200 trials × 100 MC scenarios)...")
         res = run_sensitivity(n_trials=200, n_mc_samples=100)
         bp = res["best_policy"]
-        print(f"\nOptimal 4-block policy:")
-        print(f"  Morning fare:  ${bp['fare_morning']:.2f}   freq: {bp['freq_morning']} trains/slot")
-        print(f"  Midday  fare:  ${bp['fare_midday']:.2f}   freq: {bp['freq_midday']} trains/slot")
-        print(f"  Evening fare:  ${bp['fare_evening']:.2f}   freq: {bp['freq_evening']} trains/slot")
-        print(f"  Night   fare:  ${bp['fare_night']:.2f}   freq: {bp['freq_night']} trains/slot")
+        print(f"\nOptimal 4-block policy (18:00–04:00 event window):")
+        print(f"  Pre-game  fare:  ${bp['fare_pre_game']:.2f}   freq: {bp['freq_pre_game']} trains/slot")
+        print(f"  In-game   fare:  ${bp['fare_in_game']:.2f}   freq: {bp['freq_in_game']} trains/slot")
+        print(f"  Post-game fare:  ${bp['fare_post_game']:.2f}   freq: {bp['freq_post_game']} trains/slot")
+        print(f"  Late-night fare: ${bp['fare_late_night']:.2f}   freq: {bp['freq_late_night']} trains/slot")
         print(f"  Expected profit: ${res['best_value']:,.0f}")
         os.makedirs("outputs", exist_ok=True)
         res["trials_df"].to_csv("outputs/sensitivity_results.csv", index=False)

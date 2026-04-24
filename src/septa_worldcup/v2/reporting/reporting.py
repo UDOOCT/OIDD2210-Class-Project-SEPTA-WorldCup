@@ -21,7 +21,7 @@ from typing import Dict, List, Any
 
 import numpy as np
 
-import data.scenario as SC
+import septa_worldcup.v2.config.scenario as SC
 
 
 # ─────────────────────────────────────────────────────────────────────────────

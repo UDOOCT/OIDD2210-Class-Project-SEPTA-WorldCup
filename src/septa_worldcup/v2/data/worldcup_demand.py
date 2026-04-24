@@ -39,17 +39,16 @@ from typing import Dict
 import numpy as np
 from scipy.stats import norm
 
-from data.scenario import (
+from septa_worldcup import DATA_DIR
+from septa_worldcup.v2.config.scenario import (
     N_SLOTS, SLOT_MINUTES, TOTAL_FANS_TRANSIT, RR_FEEDER_SHARE,
     FAN_SEGMENTS, MATCH_DURATION_MINUTES, STOPPAGE_TIME_BUFFER_MINUTES,
     EXIT_DELAY_MEAN_MINUTES, POST_GAME_PEAK_OFFSET_MINUTES,
     DEFAULT_KICKOFF_TIME, time_to_slot, slot_label,
 )
 
-_BASE = Path(__file__).parent
-
 # ── Load FY2024 ridership weights ─────────────────────────────────────────────
-_rbl = json.loads((_BASE / "ridership" / "ridership_by_line.json").read_text())
+_rbl = json.loads((DATA_DIR / "ridership" / "ridership_by_line.json").read_text())
 _TOTAL_DAILY_RIDERSHIP = sum(_rbl.values())   # 48,343
 _LINE_SHARES = {l: v / _TOTAL_DAILY_RIDERSHIP for l, v in _rbl.items()}
 
@@ -281,7 +280,7 @@ def get_demand(
                                  include_post_game=include_post_game)
 
     if include_baseline:
-        from data.network import LINES
+        from septa_worldcup.v1.data.network import LINES
         for line in LINES:
             baseline = compute_baseline_demand(line)
             if line in wc["rr_demand"]:

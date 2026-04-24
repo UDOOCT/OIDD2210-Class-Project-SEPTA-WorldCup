@@ -22,7 +22,9 @@ import re
 from collections import Counter, defaultdict
 from pathlib import Path
 
-_BASE = Path(__file__).parent
+from septa_worldcup import DATA_DIR
+
+_BASE = DATA_DIR
 
 # ── Load real data files ──────────────────────────────────────────────────────
 _tt_path  = _BASE / "gtfs" / "travel_times.json"

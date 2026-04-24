@@ -25,7 +25,7 @@ from __future__ import annotations
 import numpy as np
 from typing import Dict, List, Tuple
 
-from data.scenario import (
+from septa_worldcup.v2.config.scenario import (
     N_SLOTS, SLOT_MINUTES,
     BSL_TRAIN_CAPACITY, BSL_SAFETY_BUFFER,
     BSL_SERVICE_LEVELS, BSL_EVENT_HEADWAY_TARGET_MIN,

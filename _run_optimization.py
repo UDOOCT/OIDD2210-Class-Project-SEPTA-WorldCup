@@ -29,14 +29,15 @@ FIX 2: integer rounding is trivially exact here since Phase 1 produces
 """
 
 import sys, time
-sys.path.insert(0, '.')
+from pathlib import Path
+sys.path.insert(0, str(Path(__file__).parent / "src"))
 
 import numpy as np
 from scipy.optimize import minimize_scalar
 
-from data.demand import get_total_demand
-from data.network import LINES
-from data.parameters import (
+from septa_worldcup.v1.data.demand import get_total_demand
+from septa_worldcup.v1.data.network import LINES
+from septa_worldcup.v1.data.parameters import (
     TIME_SLOTS, slot_label, is_peak,
     TRAIN_CAPACITY, FIXED_COST_PER_TRAIN, VARIABLE_COST_PER_PAX,
     DAILY_BUDGET_EVENT, EQUITY_EPSILON,
@@ -44,7 +45,7 @@ from data.parameters import (
     LOGIT_ALPHA_FARE, LOGIT_ALPHA_WAIT, LOGIT_ALPHA_TRAVEL,
     LOGIT_THETA, LOGIT_NO_TRAVEL_U,
 )
-from models.upper_level import LNAMES, T
+from septa_worldcup.v1.models.upper_level import LNAMES, T
 
 WC_DRIVE_PENALTY = 3.5                           # extra driving cost, WC match day
 U_DRIVE_WC       = LOGIT_NO_TRAVEL_U - WC_DRIVE_PENALTY   # −5.00
@@ -272,23 +273,22 @@ ri   = results_by_line[line]
 
 print(f"{line} — time series (integer greedy vs continuous SLSQP):")
 print(f"  {'Time':<8} {'Demand':>7} {'f_int':>6} {'f_cont':>7} {'Pax_i':>7} {'Pax_c':>7} {'Fare':>6} {'P_tr':>6}")
-for i in [0, 4, 8, 12, 20, 28, 36, 40, 44, 48, 52, 56, 60]:
+for i in [0, 2, 4, 8, 10, 14, 18, 22, 26, 30, 35, 39]:
     print(f"  {slot_label(TIME_SLOTS[i]):<8} "
           f"{ri['d'][i]:>7.0f} {ri['f'][i]:>6.0f} {rc['f'][i]:>7.3f} "
           f"{ri['x'][i]:>7.0f} {rc['x'][i]:>7.0f} "
           f"${ri['p'][i]:>5.2f} {ri['pt'][i]:>5.1%}")
 
-# ── Logit verification: fare sweep at 7pm (WC-peak slot) ─────────────────────
+# ── Logit verification: fare sweep at pre-game peak slot ─────────────────────
 # Shows P_transit < 1 and decreasing as fare increases — confirms elastic demand.
-# Greedy chose only the 7pm slot for Paoli/Thorndale (all others unprofitable).
-# We evaluate hypothetical P_transit at f=1 across three fares.
+# Slot 4 = 19:00 (~90 min before kickoff) — highest pre-game RR demand.
 print()
 r_pt = results_by_line[line]
-i_wc = 52   # 7pm slot
+i_wc = 4    # 19:00 slot (pre-game peak, ~90 min before 20:30 kickoff)
 d_wc = float(r_pt["d"][i_wc])
 att_pt = avg_tt[line]
 
-print(f"Logit verification — {line} at 7:00pm (d={d_wc:.0f}, f=1 train):")
+print(f"Logit verification — {line} at 19:00 pre-game peak (d={d_wc:.0f}, f=1 train):")
 print(f"  Confirms P_transit < 1 and decreases as fare rises.")
 print(f"  {'Fare':>6} {'P_transit':>10} {'d_hat':>7} {'x (cap=875)':>12} "
       f"{'Rev − VarCost':>14} {'Marginal profit':>16}")
