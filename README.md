@@ -1,17 +1,17 @@
-# SEPTA Regional Rail — World Cup 2026 Network Optimization
+# SEPTA Regional Rail & Broad Street Line — World Cup 2026 Optimization
 ### OIDD 2210 Final Project
 
 ---
 
 ## Project Overview
 
-Bilevel network optimization model to allocate SEPTA Regional Rail trains and set fares on World Cup match day (Brazil vs. Haiti, June 19 2026, 9pm kickoff at Lincoln Financial Field).
+This project models SEPTA's multimodal transit challenge for World Cup 2026 match day (Brazil vs. Haiti, June 19 2026, Lincoln Financial Field). It combines two layers:
 
-**Upper level (SEPTA):** Choose integer train frequencies `f[l,t]` and fares `p[l,t]` across 13 lines × 61 time slots (15-min, 6am–9pm) to maximize profit subject to capacity, budget, equity, and fare-smoothness constraints. Solved via SLSQP continuous relaxation.
+**Layer 1 — Regional Rail (v1 baseline, preserved):**
+Bilevel network optimization over 13 lines × 61 slots (6am–9pm, 15-min). SEPTA maximizes profit by choosing integer train frequencies and fares; passengers respond via Multinomial Logit. Solved via SLSQP continuous relaxation with iterative best-response.
 
-**Lower level (Passengers):** Given SEPTA's schedule and fares, passengers choose transit vs. no-travel via Multinomial Logit, producing effective demand `x[l,t]`. The bilevel loop iterates until demand equilibrium.
-
-**Stochastic extension:** Optuna TPE search over a 4-block (morning/midday/evening/night) policy evaluated across 100 Monte Carlo demand scenarios per trial.
+**Layer 2 — Multimodal extension (new):**
+Full 18:00–04:00 match-day window (40 slots × 15 min, crossing midnight). Models Regional Rail as a feeder system and the Broad Street Line (BSL/B Line) as the primary link to NRG Station. Policy objective minimizes operating deficit plus social-cost penalties for unmet demand, crowding, equity failures, and clearance delay. Eight scenarios stress-test the system.
 
 ---
 
@@ -20,72 +20,109 @@ Bilevel network optimization model to allocate SEPTA Regional Rail trains and se
 ```
 septa_worldcup/
 ├── data/
-│   ├── network.py              ← 13 RR lines from GTFS (stations, travel times, ridership)
-│   ├── demand.py               ← Bimodal base demand + World Cup overlay + Monte Carlo
-│   ├── parameters.py           ← All cost, fleet, fare, and logit parameters
+│   ├── scenario.py             ← Master config: 18:00–04:00 window, all model parameters
+│   ├── worldcup_demand.py      ← Demand model: pre-game, in-game, post-game evacuation
+│   ├── bsl.py                  ← BSL/B Line capacity model (NRG Station)
+│   ├── network.py              ← 13 RR lines from SEPTA GTFS (stations, travel times)
+│   ├── demand.py               ← Bimodal base demand + WC overlay + Monte Carlo (v1)
+│   ├── parameters.py           ← Cost, fleet, fare, and logit parameters (v1)
 │   ├── gtfs/                   ← SEPTA GTFS v202603296 (stop_times, trips, routes, stops)
 │   ├── ridership/              ← FY2024 APC weekday boardings by line and station
 │   └── costs/                  ← Route operating statistics (cost_summary.json)
 ├── models/
-│   ├── upper_level.py          ← SLSQP upper-level solver (13×61 slots, 2,196 vars)
-│   ├── lower_level.py          ← Multinomial Logit passenger route choice
-│   ├── bilevel.py              ← Iterative best-response bilevel solver
-│   └── sensitivity.py          ← Optuna TPE stochastic search (4-block policy)
+│   ├── policy_objective.py     ← Policy objective + greedy RR allocator (new)
+│   ├── upper_level.py          ← SLSQP upper-level solver (v1, 13×61 slots)
+│   ├── lower_level.py          ← Multinomial Logit passenger route choice (v1)
+│   ├── bilevel.py              ← Iterative best-response bilevel solver (v1)
+│   └── sensitivity.py          ← Optuna TPE stochastic search (v1)
+├── reporting.py                ← KPI computation, terminal display, CSV export (new)
+├── run_scenarios.py            ← 8-scenario comparison runner (new)
 ├── utils/
 │   ├── network_builder.py      ← NetworkX multi-line graph construction
 │   └── visualize.py            ← Demand curves, allocation heatmap, fare profiles
 ├── outputs/                    ← Generated CSVs and plots (auto-created)
 ├── notebooks/
-│   └── demo.ipynb              ← End-to-end walkthrough
-├── _run_optimization.py        ← Greedy integer allocation with elastic Logit demand
-├── _run_ilp_comparison.py      ← Multiple-choice knapsack ILP via PuLP/CBC
-├── main.py                     ← Entry point: run full pipeline
-├── formulation.md              ← Full mathematical formulation (LaTeX)
+│   └── demo.ipynb              ← End-to-end walkthrough (v1)
+├── _run_optimization.py        ← Greedy integer allocation with elastic Logit demand (v1)
+├── _run_ilp_comparison.py      ← Multiple-choice knapsack ILP via PuLP/CBC (v1)
+├── main.py                     ← Entry point: v1 bilevel pipeline
+├── formulation.md              ← Full mathematical formulation
 └── README.md
 ```
 
 ---
 
-## Data Sources
+## Model Architecture
 
-| Data | Source | File | Used for |
-|---|---|---|---|
-| Line topology, station order, travel times | SEPTA GTFS v202603296 | `data/gtfs/` | Network structure, `τ_l` |
-| Weekday boardings by line (FY2024) | SEPTA OpenDataPhilly APC | `data/ridership/ridership_by_line.json` | Base demand scaling |
-| Per-station boarding shares (FY2024) | SEPTA OpenDataPhilly APC | `data/ridership/septa_rr_ridership.csv` | Station-level demand shares |
-| Route operating costs (FY2024 budgeted) | SEPTA OpenDataPhilly | `data/costs/cost_summary.json` | `c_f = $1,691.98/trip` |
-| Zone-based fares | SEPTA official fare table | `data/network.py` | Fare bounds per line |
-| Match attendance | Lincoln Financial Field cap. 69,328 | — | `N_fans = 45,000` transit users |
+### Time Window (Multimodal Layer)
+
+The 18:00–04:00 match-day window is divided into **40 slots of 15 minutes** each:
+
+| Slot | Time | Notes |
+|------|------|-------|
+| 0 | 18:00 | Window start, fans begin traveling |
+| 10 | 20:30 | Default kickoff |
+| 16 | 22:00 | Evening → late-night transition |
+| 24 | 00:00 | Crosses into next calendar day |
+| 31 | 23:45 (+1) | Match ends (for 20:30 kickoff) |
+| 39 | 03:45 (+1) | Window end |
+
+**Cross-midnight handling:** Slot indices are referenced from 18:00. The function `time_to_slot("02:00")` returns slot 32 (8 hours × 4 slots/hour), wrapping times like `00:00–04:00` correctly via modular arithmetic. All slot labels include `(+1)` for post-midnight times.
+
+### Fan Segments
+
+| Segment | Share | Mode to NRG |
+|---------|-------|-------------|
+| local_city | 35% | BSL direct |
+| suburban_rr | 30% | RR → Center City → BSL |
+| visitor_hotel_airport | 20% | 50% RR, 50% BSL |
+| car_rideshare | 15% | Outside model scope |
+
+**Total transit fans:** ~45,063 (65% of 69,328 stadium capacity).
+**RR feeder share:** 40% of transit fans (suburban_rr + half of visitor).
+
+### BSL Service Levels (Discrete)
+
+| Level | Headway | Trains/slot | Effective capacity/slot |
+|-------|---------|-------------|------------------------|
+| normal | 8 min | 2 | 1,224 pax |
+| enhanced | 5 min | 3 | 1,836 pax |
+| max_event | 3 min | 5 | 3,060 pax |
+
+Effective capacity = trains × 720 seats × 0.85 safety buffer.
+
+NRG Station platform cap: 4,000 pax/slot throughput; crowding penalty above 2,500 pax/slot.
+
+### Policy Objective (Minimize)
+
+```
+Objective = (RR_op_cost + BSL_op_cost)
+          − fare_revenue − sponsor_reimbursement
+          + 50 × unmet_pax
+          + 30 × crowding_pax
+          + 100,000 × equity_violations
+          + 5,000 × headway_excess_min
+          + 200 × clearance_excess_min
+```
+
+Lower is better. Weights reflect social cost of stranded passengers vs. financial deficit.
 
 ---
 
-## Math Formulation (summary)
+## Scenarios
 
-See [`formulation.md`](formulation.md) for full derivations and algorithm pseudocode.
+Eight scenarios are pre-configured in `run_scenarios.py`:
 
-**Key dimensions:** L = 13 lines, T = 61 slots (15-min, 6am–9pm), 4 named blocks
-
-**Decision variables:** `f[l,t] ∈ ℤ⁺`, `p[l,t] ∈ ℝ⁺`, `x[l,t] ∈ ℝ⁺`
-
-**Objective:**
-```
-max  Π = Σ p[l,t]·x[l,t]  −  Σ 1691.98·f[l,t]  −  Σ 0.40·x[l,t]
-```
-
-**Constraints (8):**
-
-| # | Name | Expression |
-|---|---|---|
-| C1 | Capacity | `x[l,t] ≤ 875·f[l,t]` |
-| C2 | Demand cap | `x[l,t] ≤ d[l,t]` |
-| C3 | Budget | `Σ 1691.98·f[l,t] ≤ $350,000` |
-| C4 | Min service | `f[l,t] ≥ 1` (peak slots), `≥ 0` (off-peak) |
-| C5 | Equity | `x[l,t] ≥ 0.80·d[l,t]` |
-| C6 | Fare bounds | `$2.50 ≤ p[l,t] ≤ $9.00` |
-| C7 | Fare smoothness | `|p[l,t] − p[l,t−1]| ≤ $1.00` |
-| C8 | Integrality | `f[l,t] ∈ ℤ⁺` |
-
-**Logit lower level:** `P_transit = 1 / (1 + exp(θ·(U_drive + G)))`, `G = 0.50·p + 0.30·(h/2) + 0.15·τ`
+| # | Name | Key Changes |
+|---|------|-------------|
+| 1 | RR-Only Baseline | RR only, no BSL model, no post-game (v1 spirit) |
+| 2 | Multimodal Default | BSL + post-game, no free return |
+| 3 | Free Return Rides | Sponsor-funded post-game trips |
+| 4 | High Attendance | 80% transit share (~55,000 fans), 2 extra RR trains |
+| 5 | Delayed Exit Surge | Post-game crowd exits 20 min later |
+| 6 | Low Sponsor Subsidy | $1/pax subsidy instead of $3 |
+| 7 | Later Kickoff (21:00) | Post-game extends past 02:00 |
+| 8 | Overnight Stress | High attendance + late kickoff + delayed exit |
 
 ---
 
@@ -95,15 +132,25 @@ max  Π = Σ p[l,t]·x[l,t]  −  Σ 1691.98·f[l,t]  −  Σ 0.40·x[l,t]
 
 ```bash
 pip install -r requirements.txt
-
-# For ILP comparison (optional):
-pip install pulp
 ```
 
-### Main pipeline
+### Multimodal scenario comparison (new)
 
 ```bash
-# Bilevel optimization (default): iterative best-response, 40 iterations max
+# Run all 8 scenarios and print comparison table:
+python run_scenarios.py
+
+# Also save results to CSV:
+python run_scenarios.py --save-csv
+
+# Run only scenario 4 (High Attendance) with full KPI report:
+python run_scenarios.py --scenario 4 --verbose
+```
+
+### V1 Regional Rail baseline
+
+```bash
+# Bilevel optimization (iterative best-response, 40 iterations max):
 python main.py
 
 # Upper-level SLSQP only (faster, continuous relaxation):
@@ -112,54 +159,96 @@ python main.py --mode upper_only
 # Stochastic sensitivity search (Optuna TPE, 200 trials × 100 MC scenarios):
 python main.py --mode sensitivity
 
-# Run on normal day demand (no World Cup overlay):
+# Normal day demand (no World Cup overlay):
 python main.py --no-worldcup
 ```
 
-### Standalone scripts
+### Standalone v1 scripts
 
 ```bash
 # Greedy integer allocation with elastic Logit demand (~3s):
 python _run_optimization.py
 
-# Greedy vs. ILP optimality comparison (requires pulp, ~2min for full 13-line):
+# Greedy vs. ILP optimality comparison (requires pulp, ~2 min):
 python _run_ilp_comparison.py
-```
-
-### Notebook
-
-```bash
-jupyter notebook notebooks/demo.ipynb
 ```
 
 ---
 
 ## Key Parameters
 
+### Regional Rail (v1)
+
 | Parameter | Value | Source |
-|---|---|---|
+|-----------|-------|--------|
 | Train capacity | 875 seats (5-car Bombardier Multilevel) | SEPTA fleet |
-| Fixed cost / trip | $1,691.98 | `$13,535.85/trainset/day ÷ 8 trips` |
+| Fixed cost / trip | $1,692.00 | `$13,535.85/trainset/day ÷ 8 trips` |
 | Variable cost / pax | $0.40 | Literature (marginal incremental) |
 | Event day budget | $350,000 | Model assumption |
 | Equity threshold ε | 0.80 | Must serve ≥ 80% of demand |
-| Max trains / slot | 8 | Fleet capacity |
 | Fare range | $2.50 – $9.00 | SEPTA zone fares + surge cap |
-| World Cup fans (transit) | 45,000 | ~65% of 69,328 capacity |
 | Logit coefficients (α₁, α₂, α₃) | 0.50, 0.30, 0.15 | Small & Verhoef (2007) |
+
+### BSL / Multimodal (new)
+
+| Parameter | Value | Notes |
+|-----------|-------|-------|
+| BSL train capacity | 720 pax (8 cars × 90 seats) | SEPTA fleet |
+| BSL safety buffer | 0.85 | Effective = nominal × buffer |
+| BSL fixed cost / extra trip | $800 | Event premium above baseline |
+| BSL variable cost / pax | $0.30 | Marginal incremental |
+| NRG throughput cap | 4,000 pax/slot | Platform + fare gate constraint |
+| Sponsor reimbursement | $3.00/pax | Default; scenario 6 tests $1.00 |
+| Post-game clearance target | 90 min | Must clear NRG within 90 min of whistle |
+| Exit delay mean | 25 min | Time from final whistle to transit queue |
+
+---
+
+## Data Sources
+
+| Data | Source | File | Used for |
+|------|--------|------|----------|
+| Line topology, station order, travel times | SEPTA GTFS v202603296 | `data/gtfs/` | Network structure |
+| Weekday boardings by line (FY2024) | SEPTA OpenDataPhilly APC | `data/ridership/ridership_by_line.json` | Demand scaling |
+| Per-station boarding shares (FY2024) | SEPTA OpenDataPhilly APC | `data/ridership/septa_rr_ridership.csv` | Station-level shares |
+| Route operating costs (FY2024 budgeted) | SEPTA OpenDataPhilly | `data/costs/cost_summary.json` | `c_f = $1,692/trip` |
+| Zone-based fares | SEPTA official fare table | `data/network.py` | Fare bounds |
+| Match attendance | Lincoln Financial Field cap. 69,328 | — | Transit fan estimate |
 
 ---
 
 ## Output
 
-`main.py` prints a per-block summary table:
+`run_scenarios.py` prints a one-line summary per scenario, then a comparison table:
 
 ```
-Line                      Block      Trains  Avg Fare      Pax   Util  Eq?
-----------------------------------------------------------------------
-Airport                   morning         …    $x.xx       …    x.x%   ✓
-Airport                   midday          …    $x.xx       …    x.x%   ✓
-...
+Policy objective        |   S1 Baseline |  S2 Multimodal |  ...
+Total served (pax)      |        44,000 |         56,000 |  ...
+Total unmet (pax)       |         1,200 |             80 |  ...
+Net deficit ($)         |       180,000 |        145,000 |  ...
+Peak NRG crowding (pax) |         3,200 |           800  |  ...
+Clearance (min)         |           120 |            85  |  ...
 ```
 
-`--mode sensitivity` also writes `outputs/sensitivity_results.csv` with all 200 trial results.
+`--verbose` adds a full KPI report per scenario including ridership, load factors, financials, equity, and penalty breakdown.
+
+---
+
+## Limitations & Assumptions
+
+- No microscopic headway simulation; slot-level capacity is deterministic.
+- BSL travel time City Hall ↔ NRG assumed constant at 15 min (historical 14–16 min).
+- Post-game demand modeled as a Normal distribution; actual exit flow is stochastic.
+- RR feeder delay (20 min Center City transfer) is fixed; no variation by line.
+- Sponsor subsidy policy is exogenous; no behavioral response to free fares.
+- Crowd flow at transfer stations (Suburban, Jefferson, 30th St.) is not explicitly modeled.
+
+---
+
+## Future Work
+
+- Replace Normal post-game wave with agent-based stadium egress simulation.
+- Add transfer station capacity constraints (fare gate throughput at Suburban/Jefferson).
+- Model variable train dwell time at NRG Station under crowding.
+- Extend bilevel to include BSL fare decisions (currently policy-fixed).
+- Incorporate actual SEPTA schedule data (departure times, not just frequency).
