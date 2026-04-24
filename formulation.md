@@ -37,19 +37,19 @@ run_scenarios.py                                  →  8-scenario comparison run
 
 | Symbol | Definition | Size |
 |--------|-----------|------|
-| $\mathcal{L}$ | Regional Rail lines | 13 (12 active per GTFS) |
-| $\mathcal{T}$ | 15-minute slots, $t \in \{0,\ldots,60\}$ | 61 |
-| $\mathcal{B}$ | Named blocks: morning, midday, evening, night | 4 |
+| $\mathcal{L}$ | Regional Rail lines | 13 |
+| $\mathcal{T}$ | 15-minute slots, $t \in \{0,\ldots,39\}$ (18:00–03:45+1) | 40 |
+| $\mathcal{B}$ | Named blocks: pre\_game, in\_game, post\_game, late\_night | 4 |
 | $\mathcal{S}$ | Unique stations across all lines | ≈140 |
 
-**Time slot mapping** ($h_t = 6.0 + 0.25t$ decimal hours, 6am–9pm):
+**Time slot mapping** (slot 0 = 18:00, slot $t$ = 18:00 + 15$t$ min):
 
-| Block | Slot range | Hours |
-|-------|-----------|-------|
-| morning | $[0,\;11]$ | 6:00–9:00 |
-| midday | $[12,\;39]$ | 9:00–16:00 |
-| evening | $[40,\;51]$ | 16:00–19:00 |
-| night | $[52,\;60]$ | 19:00–21:00 |
+| Block | Slot range | Clock time |
+|-------|-----------|------------|
+| pre\_game | $[0,\;9]$ | 18:00–20:15 |
+| in\_game | $[10,\;17]$ | 20:30–22:15 |
+| post\_game | $[18,\;29]$ | 22:30–01:15+1 |
+| late\_night | $[30,\;39]$ | 01:30–03:45+1 |
 
 **Regional Rail lines and fare zones** (source: SEPTA GTFS v202603296):
 
@@ -119,7 +119,7 @@ Flat index: $\text{idx}(l,t) = \text{lidx}[l] \cdot T + t$ where $\text{lidx}$ m
 | $p_{lt}$ | $\mathbb{R}_{\geq 0}$ | Fare charged on line $l$, slot $t$ |
 | $x_{lt}$ | $\mathbb{R}_{\geq 0}$ | Passengers served (Logit equilibrium) |
 
-Total: $13 \times 61 \times 3 = 2,379$ variables (2,196 continuous + integrality rounding).
+Total: $13 \times 40 \times 3 = 1,560$ variables (1,040 continuous + integrality rounding).
 
 ---
 
@@ -422,7 +422,7 @@ Lower $\Phi$ = better policy outcome.
 ### 18. Variable and Constraint Summary
 
 **V1 Regional Rail model:**
-- Decision variables: $13 \times 61 \times 2 = 1{,}586$ ($f_{lt}$, $p_{lt}$) + $13 \times 61 = 793$ auxiliary ($x_{lt}$) = **2,379 total**
+- Decision variables: $13 \times 40 \times 2 = 1{,}040$ ($f_{lt}$, $p_{lt}$) + $13 \times 40 = 520$ auxiliary ($x_{lt}$) = **1,560 total**
 - Constraints: C1–C8 as above; SLSQP enforces via gradient projection
 
 **Multimodal model:**

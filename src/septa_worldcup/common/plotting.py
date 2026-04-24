@@ -1,10 +1,10 @@
 """
-utils/visualize.py
+common/plotting.py
 ------------------
 Visualization helpers for SEPTA optimization results.
 
 Functions:
-  plot_demand_curve      — per-line demand across 61 slots
+  plot_demand_curve      — per-line demand across 40 slots (18:00–04:00+1)
   plot_allocation_heatmap — train counts (line × slot)
   plot_fare_profile      — fare time series for one or all lines
   plot_profit_convergence — bilevel iteration history

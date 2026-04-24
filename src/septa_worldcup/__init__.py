@@ -4,7 +4,7 @@ septa_worldcup
 SEPTA World Cup 2026 transit optimization package.
 
 Sub-packages:
-  v1  — Regional Rail profit model (6am–9pm, 61 slots × 12 lines)
+  v1  — Regional Rail profit model (18:00–04:00+1, 40 slots × 13 lines)
   v2  — Multimodal policy model  (18:00–04:00+1, 40 slots, RR + BSL)
   common — Shared utilities
 """
