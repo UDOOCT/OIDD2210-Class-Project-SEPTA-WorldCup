@@ -1,0 +1,8 @@
+python scripts/generate_all_results.py
+python scripts/validate_project.py
+
+python _run_optimization.py
+python _run_ilp_comparison.py
+python run_scenarios.py --save-csv
+
+Note: Do not use main.py as the live demo entry point because the global SLSQP/bilevel path is slower and experimental.

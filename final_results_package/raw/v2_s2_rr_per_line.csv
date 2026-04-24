@@ -1,0 +1,14 @@
+line,total_demand,total_served,total_unmet,coverage_pct,equity_target_90pct,equity_ok
+Airport,2314,2314,0,100.0,90.0,True
+Chestnut Hill East,1299,1299,0,100.0,90.0,True
+Chestnut Hill West,1381,1381,0,100.0,90.0,True
+Cynwyd,151,151,0,100.0,90.0,True
+Fox Chase,2249,2249,0,100.0,90.0,True
+Lansdale/Doylestown,4724,2624,2100,55.5,90.0,False
+Manayunk/Norristown,3717,2064,1652,55.5,90.0,False
+Media/Wawa,4632,2572,2059,55.5,90.0,False
+Paoli/Thorndale,6873,3817,3056,55.5,90.0,False
+Trenton,3813,2117,1695,55.5,90.0,False
+Warminster,3774,2096,1678,55.5,90.0,False
+West Trenton,3600,1999,1600,55.5,90.0,False
+Wilmington/Newark,3326,1847,1479,55.5,90.0,False
