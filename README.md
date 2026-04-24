@@ -67,10 +67,11 @@ The 18:00–04:00 match-day window is divided into **40 slots of 15 minutes** ea
 |------|------|-------|
 | 0 | 18:00 | Window start, fans begin traveling |
 | 10 | 20:30 | Default kickoff |
-| 16 | 22:00 | Evening → late-night transition |
-| 24 | 00:00 | Crosses into next calendar day |
-| 31 | 23:45 (+1) | Match ends (for 20:30 kickoff) |
-| 39 | 03:45 (+1) | Window end |
+| 18 | 22:30 | Approximate final whistle for 20:30 kickoff |
+| 20 | 23:00 | Post-game exit / evacuation peak begins |
+| 24 | 00:00 (+1) | Crosses into next calendar day |
+| 32 | 02:00 (+1) | Late-night evacuation tail |
+| 39 | 03:45 (+1) | Last modeled 15-minute slot |
 
 **Cross-midnight handling:** Slot indices are referenced from 18:00. The function `time_to_slot("02:00")` returns slot 32 (8 hours × 4 slots/hour), wrapping times like `00:00–04:00` correctly via modular arithmetic. All slot labels include `(+1)` for post-midnight times.
 
