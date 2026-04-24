@@ -125,9 +125,10 @@ def evaluate_rr_service(
             # Check budget before committing extra trains
             cost_extra = extra * RR_FIXED_COST_PER_TRAIN_TRIP
             if budget_used + cost_extra > budget:
-                extra  = 0
-                f_lt   = baseline
-                cap_lt = baseline * TRAIN_CAPACITY_RR
+                extra      = 0
+                f_lt       = baseline
+                cap_lt     = baseline * TRAIN_CAPACITY_RR
+                cost_extra = 0  # not deploying extra, so no budget consumed
 
             x_lt = min(d_lt, cap_lt)
             unmet = max(0.0, d_lt - x_lt)

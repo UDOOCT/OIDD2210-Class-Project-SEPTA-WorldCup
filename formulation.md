@@ -394,7 +394,9 @@ $$R_{\text{sponsor}} = r_{\text{sp}} \cdot 0.5 \cdot \sum_t (s_t^{\text{in}} + s
 
 **Equity:** Two definitions (§6 in `data/scenario.py`):
 - Raw coverage (KPI only): $\sum_t x_{lt} / \sum_t d_{lt} \geq 0.80$
-- Effective coverage (operational constraint): $\sum_t x_{lt} / \sum_t d_{lt} \geq 0.90$ (triggers $\lambda_3$ penalty if violated)
+- Effective coverage (post-hoc penalty): $\sum_t x_{lt} / \sum_t d_{lt} \geq 0.90$ triggers $\lambda_3$ penalty if violated
+
+Note: the greedy RR allocator does **not** enforce the equity threshold during allocation; it is checked post-hoc. Under the default budget ($350,000) and `extra_trains=1`, the budget is exhausted after approximately 5 of 13 lines, leaving remaining lines with zero late-night service. This produces equity violations for those lines, correctly reflected in the penalty. A higher budget or fewer extra trains reduces violations.
 
 Lower $\Phi$ = better policy outcome.
 

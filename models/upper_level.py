@@ -115,7 +115,7 @@ def _solve_scipy(d_vec, base_fares, f_min, budget):
     x_vec = [f_0,...,f_{N-1},  p_0,...,p_{N-1}]
     """
     def neg_profit(xv):
-        f = np.clip(xv[:N], f_min, MAX_TRAINS_PER_SLOT)
+        f = np.clip(xv[:N], 0.0, MAX_TRAINS_PER_SLOT)
         p = np.clip(xv[N:], FARE_MIN, FARE_MAX)
         x = np.minimum(d_vec, TRAIN_CAPACITY * f)
         rev   = np.dot(p, x)
@@ -123,22 +123,29 @@ def _solve_scipy(d_vec, base_fares, f_min, budget):
         var   = VARIABLE_COST_PER_PAX * x.sum()
         return -(rev - fixed - var)
 
-    # Initial point: 2 trains during peak, 1 off-peak; base fare
-    f0 = np.where(f_min > 0, 2.0, 1.0)
+    # Initial point: proportional to demand-weighted budget allocation.
+    # C4 (min service=1 for peak) is dropped from the formulation here because
+    # 24 peak slots × 13 lines × $1,692/train = $527,904 > $350,000 budget,
+    # making C3+C4 jointly infeasible.  The equity constraint C5 already
+    # guarantees trains are deployed wherever there is demand (cap ≥ ε·d).
+    f0 = np.minimum(d_vec / max(TRAIN_CAPACITY, 1), MAX_TRAINS_PER_SLOT)
+    f0_cost = FIXED_COST_PER_TRAIN * f0.sum()
+    if f0_cost > budget:
+        f0 = f0 * (budget * 0.9 / f0_cost)
     x0 = np.concatenate([f0, base_fares])
 
     bounds = (
-        list(zip(f_min, [MAX_TRAINS_PER_SLOT]*N)) +
+        [(0.0, MAX_TRAINS_PER_SLOT)] * N +
         [(FARE_MIN, FARE_MAX)] * N
     )
 
     constraints = [
         # C3: budget
         {"type": "ineq",
-         "fun": lambda xv: budget - FIXED_COST_PER_TRAIN * np.clip(xv[:N], f_min, MAX_TRAINS_PER_SLOT).sum()},
+         "fun": lambda xv: budget - FIXED_COST_PER_TRAIN * np.clip(xv[:N], 0.0, MAX_TRAINS_PER_SLOT).sum()},
         # C5: equity — capacity must cover ε×demand
         {"type": "ineq",
-         "fun": lambda xv: TRAIN_CAPACITY * np.clip(xv[:N], f_min, MAX_TRAINS_PER_SLOT) - EQUITY_EPSILON * d_vec},
+         "fun": lambda xv: TRAIN_CAPACITY * np.clip(xv[:N], 0.0, MAX_TRAINS_PER_SLOT) - EQUITY_EPSILON * d_vec},
         # C7: fare smoothness — |p[t] - p[t-1]| ≤ 1.0 per line
         # encoded as: p[t] - p[t-1] ≥ -1.0  AND  p[t-1] - p[t] ≥ -1.0
         {"type": "ineq",
@@ -156,7 +163,7 @@ def _solve_scipy(d_vec, base_fares, f_min, budget):
     res = minimize(
         neg_profit, x0, method="SLSQP",
         bounds=bounds, constraints=constraints,
-        options={"maxiter": 3000, "ftol": 1e-8},
+        options={"maxiter": 500, "ftol": 1e-6},
     )
 
     return _parse_result(res.x, d_vec, f_min, res.fun, res.success)
