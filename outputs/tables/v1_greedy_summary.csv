@@ -1,0 +1,16 @@
+metric,value
+model,v1 Regional Rail Greedy
+time_window,18:00–04:00+1
+n_slots,40
+n_lines,13
+profit,288305.78
+revenue,684155.09
+fixed_cost,348547.88
+variable_cost,47301.43
+budget_used,348547.88
+budget_limit,350000
+total_passengers_served,118254
+total_unmet_transit_demand,0
+equity_ok,True
+phase1_table_seconds,1.59
+greedy_solve_seconds,0.1169

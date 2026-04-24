@@ -1,0 +1,169 @@
+SEPTA World Cup 2026 — Final Validation Summary
+================================================
+Generated: 2026-04-24 18:03
+Run from:  scripts/generate_all_results.py
+
+═══════════════════════════════════════════════
+1. COMMANDS RUN
+═══════════════════════════════════════════════
+
+  python _run_optimization.py          — v1 greedy entry-point script
+  python _run_ilp_comparison.py        — v1 ILP comparison entry-point script
+  python run_scenarios.py --save-csv   — v2 eight-scenario runner
+  python scripts/generate_all_results.py — this script (all final outputs)
+  python scripts/validate_project.py   — import smoke test (all 11 checks)
+  python -m compileall src scripts     — syntax check (0 errors)
+
+═══════════════════════════════════════════════
+2. TIME-WINDOW CONFIRMATION
+═══════════════════════════════════════════════
+
+  v1 Active:  18:00–04:00+1  (40 slots, 15-min)   N_SLOTS=40  ✓
+  v2 Active:  18:00–04:00+1  (40 slots, 15-min)   N_SLOTS=40  ✓
+  Slot 0  = 18:00   Slot 10 = 20:30 (kickoff)
+  Slot 24 = 00:00+1 Slot 39 = 03:45+1 (window end)
+
+═══════════════════════════════════════════════
+3. V1 REGIONAL RAIL GREEDY RESULTS
+═══════════════════════════════════════════════
+
+  Profit:                   $  288,305.78
+  Revenue:                  $  684,155.09
+  Fixed cost:               $  348,547.88
+  Variable cost:            $   47,301.43
+  Budget used:              $  348,547.88  (limit $350,000)
+  Total passengers served:        118,254
+  Total unmet transit demand:           0
+  Equity OK:                         True
+  Phase-1 table time:               1.59s
+  Greedy solve time:              0.1169s
+
+═══════════════════════════════════════════════
+4. V1 ILP COMPARISON
+═══════════════════════════════════════════════
+
+  Greedy profit:    $  288,305.78
+  ILP profit:       $  288,305.78
+  Absolute gap:     $       +0.00
+  Percent gap:            0.0000%
+  ILP status:       Optimal
+  ILP solve time:         12.44s
+
+  → Greedy is globally optimal (0% gap confirmed).
+
+═══════════════════════════════════════════════
+5. V2 SCENARIO COMPARISON SUMMARY
+═══════════════════════════════════════════════
+
+  Scenario                         Served    Unmet    Deficit  Clearance
+  ------------------------------------------------------------------------
+  1. RR-Only Baseline              23,347   47,796 $  651,460       330min
+  2. Multimodal Default            90,489   43,741 $  736,760       225min
+  3. Free Return Rides             90,489   43,741 $  648,445       225min
+  4. High Attendance               96,779   66,989 $  637,198       270min
+  5. Delayed Exit Surge            89,033   45,197 $  648,056       225min
+  6. Low Sponsor Subsidy           90,489   43,741 $  712,403       225min
+  7. Later Kickoff (21:00)         92,447   41,782 $  642,648       225min
+  8. Overnight Stress              99,098   64,668 $  628,307       270min
+
+═══════════════════════════════════════════════
+6. S2 MULTIMODAL DEFAULT — DETAILED KPIs
+═══════════════════════════════════════════════
+
+  Total served:                90,489 pax
+    RR served:                 26,531 pax
+    BSL served:                63,958 pax
+  Total unmet:                 43,741 pax
+  Late-night unmet:             2,407 pax (post-midnight)
+  Peak NRG crowding:                0 pax above threshold
+  Post-game clearance:            225 min
+  Operating cost:          $   803,088
+  Fare revenue:            $    66,328
+  Sponsor reimbursement:   $         0
+  Net deficit:             $   736,760
+  Equity violations:                8 lines below 90%
+  Raw coverage:                 63.4%
+  BSL load factor:              61.1%
+  RR load factor:                7.3%
+  Policy objective:         3,750,824
+
+═══════════════════════════════════════════════
+7. RR LINE EQUITY COVERAGE (S2)
+═══════════════════════════════════════════════
+
+  Line                         Coverage  Status
+  --------------------------------------------------
+    Lansdale/Doylestown            55.5%  VIOLATION
+    Manayunk/Norristown            55.5%  VIOLATION
+    Media/Wawa                     55.5%  VIOLATION
+    Paoli/Thorndale                55.5%  VIOLATION
+    Trenton                        55.5%  VIOLATION
+    Warminster                     55.5%  VIOLATION
+    West Trenton                   55.5%  VIOLATION
+    Wilmington/Newark              55.5%  VIOLATION
+    Airport                       100.0%  OK
+    Chestnut Hill East            100.0%  OK
+    Chestnut Hill West            100.0%  OK
+    Cynwyd                        100.0%  OK
+    Fox Chase                     100.0%  OK
+
+  Red = below 80%  |  Orange = 80–90%  |  Green = ≥ 90%
+  Equity violations (< 90%) are EXPECTED under $350K budget (see docs/VALIDATION.md §7).
+
+═══════════════════════════════════════════════
+8. GENERATED OUTPUTS
+═══════════════════════════════════════════════
+
+  Tables:
+    outputs/tables/v1_greedy_summary.csv
+    outputs/tables/v1_ilp_comparison.csv
+    outputs/tables/v2_scenario_comparison.csv
+    outputs/tables/v1_vs_v2_summary.csv
+
+  Raw data:
+    outputs/raw/v2_s2_bsl_per_slot.csv
+    outputs/raw/v2_s2_rr_per_line.csv
+
+  Figures:
+    outputs/figures/v2_net_deficit_by_scenario.png
+    outputs/figures/v2_unmet_demand_by_scenario.png
+    outputs/figures/v2_peak_nrg_crowding_by_scenario.png
+    outputs/figures/v2_post_game_clearance_by_scenario.png
+    outputs/figures/v2_bsl_load_factor_timeseries.png
+    outputs/figures/v2_post_game_evacuation_curve.png
+    outputs/figures/v1_vs_v2_key_kpis.png
+    outputs/figures/v2_equity_coverage_by_line.png
+
+  Validation:
+    outputs/validation/final_validation_summary.txt  (this file)
+
+═══════════════════════════════════════════════
+9. REMAINING LIMITATIONS
+═══════════════════════════════════════════════
+
+  L1. main.py global SLSQP: ~14s/iter × 500 iters ≈ 2 hours.
+      Use _run_optimization.py (~15s) for v1 results.
+  L2. 8 equity violations (v2): expected under $350K budget — correct behavior.
+  L3. BSL clearance 225 min (S2): correct queue math for 45K post-game fans.
+  L4. main.py --mode sensitivity: slow (200 Optuna trials × SLSQP each).
+  L5. Equity in greedy RR allocator: post-hoc penalty, not enforced during allocation.
+  L6. Post-game demand: Normal distribution; actual stadium egress is stochastic.
+  L7. PuLP/CBC: commented out in requirements.txt.
+      Gap 0% confirmed in prior audit; ILP is reproducible if PuLP is installed.
+
+═══════════════════════════════════════════════
+10. HOW TO INTERPRET RESULTS
+═══════════════════════════════════════════════
+
+  v1 = Regional Rail-only profit baseline (Logit elastic demand, greedy integer).
+  v2 = Multimodal policy/capacity model (RR feeder + BSL + NRG Station).
+  Both use: 18:00–04:00+1 window, 40 slots, 15-min resolution.
+
+  v1 profit ($288K+) and v2 net deficit ($648K+) are DIFFERENT objective types:
+    v1 maximizes  Σ(fare × pax) − fixed_cost − var_cost
+    v2 minimizes  (cost − revenue − sponsor) + social_cost_penalties
+
+  BSL/NRG post-game evacuation is the binding bottleneck for v2:
+    225 min clearance vs 90 min target; 8 equity line violations.
+  Sponsor/free-return policy changes the question from pure profit
+    to subsidy–service tradeoff (see S3 Free Return Rides vs S6 Low Subsidy).

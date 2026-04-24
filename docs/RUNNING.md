@@ -6,35 +6,47 @@
 pip install -r requirements.txt
 ```
 
-## Quick start (recommended)
+## Generate all final results (recommended)
 
 ```bash
-# v1 — greedy optimization (~4 seconds)
+# Single command: v1 greedy + ILP + all 8 v2 scenarios + all figures + CSVs:
+python scripts/generate_all_results.py
+```
+
+## Individual commands
+
+```bash
+# v1 — greedy optimization (~15s including Phase-1 tables):
 python _run_optimization.py
 
-# v1 — verify greedy is globally optimal via ILP
+# v1 — verify greedy is globally optimal via ILP (~15s):
 python _run_ilp_comparison.py
 
-# v2 — eight-scenario comparison (~5 seconds)
+# v2 — eight-scenario comparison (~5 seconds):
 python run_scenarios.py
-python run_scenarios.py --save-csv   # also writes outputs/tables/scenario_comparison.csv
-```
+python run_scenarios.py --save-csv      # also writes outputs/tables/
+python run_scenarios.py --scenario 2 --verbose  # single scenario + full KPIs
 
-Equivalent calls via `scripts/`:
-
-```bash
-python scripts/run_v1_greedy.py
-python scripts/run_v1_ilp_comparison.py
-python scripts/run_v2_scenarios.py
-```
-
-## Validation smoke test
-
-```bash
+# Smoke test (no results generated):
 python scripts/validate_project.py
 ```
 
-Imports every package module and verifies data files load. No results generated.
+## Generated outputs
+
+```
+outputs/
+├── tables/
+│   ├── v1_greedy_summary.csv
+│   ├── v1_ilp_comparison.csv
+│   ├── v2_scenario_comparison.csv
+│   └── v1_vs_v2_summary.csv
+├── figures/                         ← 8 PNG figures
+├── raw/
+│   ├── v2_s2_bsl_per_slot.csv      ← per-slot BSL data (S2)
+│   └── v2_s2_rr_per_line.csv       ← per-line RR equity (S2)
+└── validation/
+    └── final_validation_summary.txt
+```
 
 ## Full bilevel pipeline (slow — ~2 hours)
 
@@ -44,11 +56,11 @@ python main.py                      # full bilevel, superset of upper_only
 python main.py --mode sensitivity   # Optuna sweep, ~hours
 ```
 
-See `outputs/validation/validation_summary.txt` §5 and §10 for known runtime limits.
+See `outputs/validation/final_validation_summary.txt` §9 for known runtime limits.
 
 ## Time window
 
-Both v1 and v2 now use the same window:
+Both v1 and v2 use the same window:
 - **18:00 match day → 03:45+1 next day**
 - 15-minute slots, 40 slots total
 - Post-midnight slots labeled with `(+1)`
@@ -66,7 +78,8 @@ src/septa_worldcup/
 data/             Raw data assets (GTFS, ridership CSVs, cost JSON)
 docs/             This documentation
 outputs/
-  tables/         CSV scenario comparison tables
-  validation/     Validation audit reports
-  figures/        (empty — figures generated on demand)
+  tables/         CSV result tables
+  figures/        PNG charts
+  raw/            Per-slot / per-line raw data CSVs
+  validation/     Audit and validation reports
 ```

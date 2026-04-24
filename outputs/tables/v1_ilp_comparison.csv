@@ -1,0 +1,11 @@
+metric,value
+greedy_profit,288305.78
+ilp_profit,288305.78
+absolute_gap,0.0
+percent_gap,0.0
+greedy_runtime_seconds,1.71
+ilp_runtime_seconds,12.44
+budget_used,348547.88
+budget_limit,350000
+ilp_status,Optimal
+notes,PuLP ILP solved

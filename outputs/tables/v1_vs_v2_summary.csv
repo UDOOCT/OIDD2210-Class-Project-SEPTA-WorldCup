@@ -1,0 +1,14 @@
+field,v1_greedy,v2_multimodal_default
+model,v1 Regional Rail Greedy,v2 Multimodal Default (S2)
+objective_type,Maximize RR profit,Minimize policy deficit
+time_window,18:00–04:00+1,18:00–04:00+1
+n_slots,40,40
+total_served,118254,90489
+unmet_demand,0,43741
+fare_revenue,684155.09,66328
+sponsor_reimbursement,N/A,0
+operating_cost,395849.31,803088
+profit_or_net_deficit,288305.78,736760
+profit_positive_deficit_positive,profit>0 = surplus,deficit>0 = shortfall
+equity_ok,True,8 line violations
+key_bottleneck,Budget $350K; greedy=ILP optimal,BSL NRG clearance; 8 equity violations

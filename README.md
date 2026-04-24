@@ -140,43 +140,72 @@ Eight scenarios are pre-configured in `run_scenarios.py`:
 pip install -r requirements.txt
 ```
 
-### Multimodal scenario comparison (new)
+### Generate all final results (recommended)
 
 ```bash
-# Run all 8 scenarios and print comparison table:
-python run_scenarios.py
-
-# Also save results to CSV:
-python run_scenarios.py --save-csv
-
-# Run only scenario 4 (High Attendance) with full KPI report:
-python run_scenarios.py --scenario 4 --verbose
+# Single command: runs v1 greedy + v1 ILP + all 8 v2 scenarios,
+# writes all CSVs, figures, raw data, and validation summary:
+python scripts/generate_all_results.py
 ```
 
-### V1 Regional Rail baseline
+### Individual commands
 
 ```bash
-# Bilevel optimization (iterative best-response, 40 iterations max):
-python main.py
-
-# Upper-level SLSQP only (faster, continuous relaxation):
-python main.py --mode upper_only
-
-# Stochastic sensitivity search (Optuna TPE, 200 trials × 100 MC scenarios):
-python main.py --mode sensitivity
-
-# Normal day demand (no World Cup overlay):
-python main.py --no-worldcup
-```
-
-### Standalone v1 scripts
-
-```bash
-# Greedy integer allocation with elastic Logit demand (~3s):
+# v1 greedy integer allocation with elastic Logit demand (~15s):
 python _run_optimization.py
 
-# Greedy vs. ILP optimality comparison (requires pulp, ~2 min):
+# v1 greedy vs. ILP optimality comparison (requires pulp, ~15s):
 python _run_ilp_comparison.py
+
+# v2 eight-scenario comparison:
+python run_scenarios.py
+python run_scenarios.py --save-csv           # also writes outputs/tables/
+python run_scenarios.py --scenario 4 --verbose  # single scenario, full KPIs
+
+# Import smoke test (no results generated):
+python scripts/validate_project.py
+```
+
+### Generated outputs
+
+```
+outputs/
+├── tables/
+│   ├── v1_greedy_summary.csv          ← v1 profit, revenue, budget, pax
+│   ├── v1_ilp_comparison.csv          ← greedy vs ILP gap (0%)
+│   ├── v2_scenario_comparison.csv     ← all 8 scenarios, all KPIs
+│   └── v1_vs_v2_summary.csv           ← side-by-side cross-model comparison
+├── figures/
+│   ├── v2_net_deficit_by_scenario.png
+│   ├── v2_unmet_demand_by_scenario.png
+│   ├── v2_peak_nrg_crowding_by_scenario.png
+│   ├── v2_post_game_clearance_by_scenario.png
+│   ├── v2_bsl_load_factor_timeseries.png
+│   ├── v2_post_game_evacuation_curve.png
+│   ├── v1_vs_v2_key_kpis.png
+│   └── v2_equity_coverage_by_line.png
+├── raw/
+│   ├── v2_s2_bsl_per_slot.csv         ← per-slot BSL demand/served/crowding
+│   └── v2_s2_rr_per_line.csv          ← per-line RR equity coverage
+└── validation/
+    └── final_validation_summary.txt
+```
+
+### How to interpret results
+
+- **v1** = Regional Rail-only profit baseline. Maximizes `Σ(fare × pax) − cost`. Logit elastic demand. Greedy integer allocation = ILP optimal (0% gap).
+- **v2** = Multimodal policy/capacity model. Minimizes `(cost − revenue − sponsor) + social_cost_penalties`. Models RR feeder + BSL + NRG Station.
+- **Both** use 18:00–04:00+1, 40 slots, 15-min resolution.
+- **v1 profit** ($288K+) and **v2 net deficit** ($648K+) are different objective types — not directly comparable.
+- **BSL/NRG post-game clearance** is the binding bottleneck in v2 (225 min vs 90 min target).
+- **Sponsor/free-return policy** changes the tradeoff from pure profit to subsidy–service balance (see S3 vs S6).
+
+### Slow entry points (bilevel / sensitivity)
+
+```bash
+python main.py --mode upper_only   # global SLSQP, ~4–15 min
+python main.py                     # full bilevel, superset of upper_only
+python main.py --mode sensitivity  # Optuna sweep, ~hours
 ```
 
 ---
