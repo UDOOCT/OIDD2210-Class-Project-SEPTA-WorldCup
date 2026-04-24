@@ -1,0 +1,905 @@
+{
+  "Airport": {
+    "Suburban": {
+      "Gray 30th St": 4.5,
+      "Jefferson": 5.0
+    },
+    "Gray 30th St": {
+      "Penn Medicine": 3.0,
+      "Suburban": 3.31
+    },
+    "Penn Medicine": {
+      "Eastwick": 9.0,
+      "Gray 30th St": 3.0
+    },
+    "Eastwick": {
+      "Airport Terminal A": 5.5,
+      "Penn Medicine": 12.0
+    },
+    "Airport Terminal A": {
+      "Airport Terminal B": 1.0,
+      "Eastwick": 4.0
+    },
+    "Airport Terminal B": {
+      "Airport Terminals C & D": 2.0,
+      "Airport Terminal A": 1.0
+    },
+    "Airport Terminals C & D": {
+      "Airport Terminals E & F": 2.0,
+      "Airport Terminal B": 1.0
+    },
+    "Airport Terminals E & F": {
+      "Airport Terminals C & D": 2.0
+    },
+    "Jefferson": {
+      "Temple University": 5.33,
+      "Suburban": 5.0
+    },
+    "Temple University": {
+      "Jefferson": 7.0
+    }
+  },
+  "Chestnut Hill East": {
+    "Suburban": {
+      "Jefferson": 5.0
+    },
+    "Jefferson": {
+      "Temple University": 4.97,
+      "Suburban": 2.21
+    },
+    "Temple University": {
+      "Wayne Junction": 7.35,
+      "Jefferson": 6.52
+    },
+    "Wayne Junction": {
+      "Wister": 3.35,
+      "Temple University": 6.03
+    },
+    "Wister": {
+      "Germantown": 2.65,
+      "Wayne Junction": 4.86
+    },
+    "Germantown": {
+      "Washington Lane": 3.0,
+      "Wister": 2.31
+    },
+    "Washington Lane": {
+      "Stenton": 2.0,
+      "Germantown": 3.0
+    },
+    "Stenton": {
+      "Sedgwick": 2.0,
+      "Washington Lane": 2.0
+    },
+    "Sedgwick": {
+      "Mount Airy": 2.0,
+      "Stenton": 2.0
+    },
+    "Mount Airy": {
+      "Wyndmoor": 2.06,
+      "Sedgwick": 1.93
+    },
+    "Wyndmoor": {
+      "Gravers": 1.97,
+      "Mount Airy": 2.0
+    },
+    "Gravers": {
+      "Chestnut Hill East": 4.19,
+      "Wyndmoor": 2.0
+    },
+    "Gray 30th St": {
+      "Suburban": 5.0
+    },
+    "Chestnut Hill East": {
+      "Gravers": 2.0
+    }
+  },
+  "Chestnut Hill West": {
+    "Suburban": {
+      "Gray 30th St": 4.75,
+      "Jefferson": 5.0
+    },
+    "Gray 30th St": {
+      "North Philadelphia Septa": 10.0,
+      "Suburban": 4.44
+    },
+    "North Philadelphia Septa": {
+      "Queen Lane": 6.0,
+      "Gray 30th St": 10.75
+    },
+    "Queen Lane": {
+      "Chelten Avenue": 1.75,
+      "North Philadelphia Septa": 5.5
+    },
+    "Chelten Avenue": {
+      "Tulpehocken": 1.0,
+      "Queen Lane": 2.0
+    },
+    "Tulpehocken": {
+      "Upsal": 2.0,
+      "Chelten Avenue": 2.0
+    },
+    "Upsal": {
+      "Carpenter": 2.0,
+      "Tulpehocken": 2.0
+    },
+    "Carpenter": {
+      "Richard Allen Lane": 1.75,
+      "Upsal": 2.0
+    },
+    "Richard Allen Lane": {
+      "St. Martins": 2.0,
+      "Carpenter": 2.0
+    },
+    "St. Martins": {
+      "Highland": 3.5,
+      "Richard Allen Lane": 1.25
+    },
+    "Highland": {
+      "Chestnut Hill West": 4.75,
+      "St. Martins": 2.0
+    },
+    "Chestnut Hill West": {
+      "Highland": 2.0
+    },
+    "Jefferson": {
+      "Temple University": 4.33
+    }
+  },
+  "Cynwyd": {
+    "Cynwyd": {
+      "Bala": 2.0
+    },
+    "Bala": {
+      "Wynnefield Avenue": 3.0,
+      "Cynwyd": 2.17
+    },
+    "Wynnefield Avenue": {
+      "Gray 30th St": 12.0,
+      "Bala": 3.0
+    },
+    "Gray 30th St": {
+      "Suburban": 5.0,
+      "Wynnefield Avenue": 11.0
+    },
+    "Suburban": {
+      "Gray 30th St": 5.0
+    }
+  },
+  "Fox Chase": {
+    "Suburban": {
+      "Jefferson": 5.0,
+      "Gray 30th St": 5.0
+    },
+    "Jefferson": {
+      "Temple University": 4.27,
+      "Suburban": 2.13
+    },
+    "Temple University": {
+      "Wayne Junction": 6.27,
+      "Jefferson": 6.0
+    },
+    "Wayne Junction": {
+      "Olney": 4.93,
+      "Temple University": 5.62
+    },
+    "Olney": {
+      "Lawndale": 2.37,
+      "Wayne Junction": 5.05
+    },
+    "Lawndale": {
+      "Cheltenham": 3.44,
+      "Olney": 3.56
+    },
+    "Cheltenham": {
+      "Ryers": 1.37,
+      "Lawndale": 2.0
+    },
+    "Ryers": {
+      "Fox Chase": 4.07,
+      "Cheltenham": 1.51
+    },
+    "Fox Chase": {
+      "Ryers": 3.0
+    },
+    "Gray 30th St": {
+      "Suburban": 5.0
+    }
+  },
+  "Lansdale/Doylestown": {
+    "Suburban": {
+      "Jefferson": 4.85,
+      "Gray 30th St": 4.5
+    },
+    "Jefferson": {
+      "Temple University": 4.67,
+      "Suburban": 2.91
+    },
+    "Temple University": {
+      "North Broad": 2.05,
+      "Fort Washington": 21.5,
+      "Wayne Junction": 6.0,
+      "Jefferson": 6.04,
+      "Jenkintown-Wyncote": 13.5
+    },
+    "North Broad": {
+      "Wayne Junction": 5.29,
+      "Temple University": 1.65
+    },
+    "Wayne Junction": {
+      "Fern Rock": 3.6,
+      "Temple University": 7.5,
+      "North Broad": 5.54
+    },
+    "Fern Rock": {
+      "Jenkintown-Wyncote": 6.26,
+      "Wayne Junction": 3.51
+    },
+    "Jenkintown-Wyncote": {
+      "Glenside": 2.67,
+      "Fern Rock": 5.92,
+      "Fort Washington": 7.0,
+      "Temple University": 14.5
+    },
+    "Glenside": {
+      "North Hills": 2.0,
+      "Jenkintown-Wyncote": 3.02
+    },
+    "North Hills": {
+      "Oreland": 1.98,
+      "Glenside": 3.02
+    },
+    "Oreland": {
+      "Fort Washington": 3.12,
+      "North Hills": 2.02
+    },
+    "Fort Washington": {
+      "Ambler": 2.89,
+      "Oreland": 4.0,
+      "Temple University": 22.0
+    },
+    "Ambler": {
+      "Penllyn": 3.02,
+      "Fort Washington": 3.0,
+      "North Wales": 10.0
+    },
+    "Penllyn": {
+      "Gwynedd Valley": 2.47,
+      "Ambler": 3.0
+    },
+    "Gwynedd Valley": {
+      "North Wales": 3.69,
+      "Penllyn": 2.51
+    },
+    "North Wales": {
+      "Pennbrook": 2.89,
+      "Gwynedd Valley": 3.49
+    },
+    "Pennbrook": {
+      "Lansdale": 5.78,
+      "North Wales": 2.93
+    },
+    "Lansdale": {
+      "9th St Lansdale": 2.53,
+      "Pennbrook": 3.16
+    },
+    "9th St Lansdale": {
+      "Fortuna": 2.03,
+      "Lansdale": 7.0
+    },
+    "Fortuna": {
+      "Colmar": 2.55,
+      "9th St Lansdale": 2.0
+    },
+    "Colmar": {
+      "Link Belt": 3.0,
+      "Chalfont": 5.0,
+      "Fortuna": 1.62
+    },
+    "Link Belt": {
+      "Chalfont": 7.45,
+      "Colmar": 1.86
+    },
+    "Chalfont": {
+      "New Britain": 3.53,
+      "Link Belt": 3.67,
+      "Colmar": 4.0
+    },
+    "New Britain": {
+      "Delaware Valley University": 2.24,
+      "Chalfont": 2.95
+    },
+    "Delaware Valley University": {
+      "Doylestown": 5.92,
+      "New Britain": 2.03
+    },
+    "Penn Medicine": {
+      "Gray 30th St": 3.0
+    },
+    "Gray 30th St": {
+      "Suburban": 4.64,
+      "Penn Medicine": 3.0
+    },
+    "Doylestown": {
+      "Delaware Valley University": 4.23
+    }
+  },
+  "Manayunk/Norristown": {
+    "Norristown Elm Street": {
+      "Main Street": 2.02
+    },
+    "Main Street": {
+      "Norristown": 4.03,
+      "Norristown Elm Street": 4.5
+    },
+    "Norristown": {
+      "Conshohocken": 5.98,
+      "Main Street": 3.73
+    },
+    "Conshohocken": {
+      "Spring Mill": 3.48,
+      "Norristown": 9.41
+    },
+    "Spring Mill": {
+      "Miquon": 3.52,
+      "Conshohocken": 3.05
+    },
+    "Miquon": {
+      "Ivy Ridge": 4.54,
+      "Spring Mill": 2.61
+    },
+    "Ivy Ridge": {
+      "Manayunk": 2.33,
+      "Miquon": 5.07
+    },
+    "Manayunk": {
+      "Wissahickon": 2.93,
+      "Ivy Ridge": 2.09,
+      "Temple University": 9.0
+    },
+    "Wissahickon": {
+      "East Falls": 2.09,
+      "Manayunk": 2.51
+    },
+    "East Falls": {
+      "Allegheny": 3.86,
+      "Wissahickon": 2.38,
+      "Temple University": 9.0
+    },
+    "Allegheny": {
+      "North Broad": 3.56,
+      "East Falls": 2.19
+    },
+    "North Broad": {
+      "Temple University": 2.49,
+      "Allegheny": 3.58
+    },
+    "Temple University": {
+      "Jefferson": 6.02,
+      "North Broad": 1.5,
+      "East Falls": 7.5,
+      "Allegheny": 4.33,
+      "Manayunk": 12.0
+    },
+    "Jefferson": {
+      "Suburban": 1.67,
+      "Temple University": 4.5
+    },
+    "Suburban": {
+      "Jefferson": 5.0,
+      "Gray 30th St": 4.83
+    },
+    "Gray 30th St": {
+      "Suburban": 5.0
+    }
+  },
+  "Media/Wawa": {
+    "Media": {
+      "Moylan-Rose Valley": 1.82,
+      "Elwyn": 4.97
+    },
+    "Moylan-Rose Valley": {
+      "Wallingford": 2.04,
+      "Media": 2.32
+    },
+    "Wallingford": {
+      "Swarthmore": 3.02,
+      "Moylan-Rose Valley": 2.59
+    },
+    "Swarthmore": {
+      "Morton-Rutledge": 2.96,
+      "Wallingford": 2.5
+    },
+    "Morton-Rutledge": {
+      "Secane": 2.58,
+      "Swarthmore": 2.55
+    },
+    "Secane": {
+      "Primos": 2.04,
+      "Morton-Rutledge": 2.09
+    },
+    "Primos": {
+      "Clifton-Aldan": 2.0,
+      "Secane": 2.09,
+      "Penn Medicine": 11.0
+    },
+    "Clifton-Aldan": {
+      "Gladstone": 2.0,
+      "Primos": 2.0
+    },
+    "Gladstone": {
+      "Lansdowne": 2.05,
+      "Clifton-Aldan": 2.0
+    },
+    "Lansdowne": {
+      "Fernwood-Yeadon": 2.02,
+      "Gladstone": 2.0,
+      "Penn Medicine": 11.0
+    },
+    "Fernwood-Yeadon": {
+      "Angora": 2.05,
+      "Lansdowne": 2.0
+    },
+    "Angora": {
+      "49th St": 2.98,
+      "Fernwood-Yeadon": 2.0
+    },
+    "49th St": {
+      "Penn Medicine": 4.65,
+      "Angora": 2.0
+    },
+    "Penn Medicine": {
+      "Gray 30th St": 3.0,
+      "49th St": 4.02,
+      "Primos": 12.0
+    },
+    "Gray 30th St": {
+      "Suburban": 4.02,
+      "Penn Medicine": 3.05
+    },
+    "Suburban": {
+      "Gray 30th St": 4.48,
+      "Jefferson": 5.0
+    },
+    "Elwyn": {
+      "Wawa": 7.58,
+      "Media": 3.1
+    },
+    "Wawa": {
+      "Elwyn": 6.08
+    },
+    "Jefferson": {
+      "Temple University": 5.5,
+      "Suburban": 5.0
+    },
+    "Temple University": {
+      "Jefferson": 6.0
+    }
+  },
+  "Paoli/Thorndale": {
+    "Suburban": {
+      "Gray 30th St": 4.93,
+      "Jefferson": 5.0
+    },
+    "Gray 30th St": {
+      "Overbrook": 9.49,
+      "Bryn Mawr": 14.0,
+      "Wayne": 20.0,
+      "Suburban": 4.1
+    },
+    "Overbrook": {
+      "Merion": 2.0,
+      "Gray 30th St": 11.54
+    },
+    "Merion": {
+      "Narberth": 2.07,
+      "Overbrook": 2.32
+    },
+    "Narberth": {
+      "Wynnewood": 1.96,
+      "Merion": 2.02
+    },
+    "Wynnewood": {
+      "Ardmore": 2.15,
+      "Narberth": 1.52
+    },
+    "Ardmore": {
+      "Haverford": 2.04,
+      "Wynnewood": 2.14
+    },
+    "Haverford": {
+      "Bryn Mawr": 2.42,
+      "Ardmore": 1.95
+    },
+    "Bryn Mawr": {
+      "Rosemont": 2.07,
+      "Haverford": 2.3,
+      "Overbrook": 9.0
+    },
+    "Rosemont": {
+      "Villanova": 2.37,
+      "Bryn Mawr": 2.88
+    },
+    "Villanova": {
+      "Radnor": 2.11,
+      "Rosemont": 2.19
+    },
+    "Radnor": {
+      "St. Davids": 2.04,
+      "Villanova": 2.02
+    },
+    "St. Davids": {
+      "Wayne": 2.05,
+      "Radnor": 2.02
+    },
+    "Wayne": {
+      "Strafford": 2.16,
+      "St. Davids": 2.02,
+      "Gray 30th St": 21.0
+    },
+    "Strafford": {
+      "Devon": 2.95,
+      "Wayne": 2.34
+    },
+    "Devon": {
+      "Berwyn": 2.18,
+      "Strafford": 2.19
+    },
+    "Berwyn": {
+      "Daylesford": 2.42,
+      "Devon": 2.05
+    },
+    "Daylesford": {
+      "Paoli": 4.18,
+      "Berwyn": 2.16
+    },
+    "Paoli": {
+      "Malvern": 4.07,
+      "Daylesford": 2.98
+    },
+    "Malvern": {
+      "Exton": 6.14,
+      "Paoli": 3.39
+    },
+    "Exton": {
+      "Whitford": 2.24,
+      "Malvern": 6.26
+    },
+    "Whitford": {
+      "Downingtown": 6.57,
+      "Exton": 2.09
+    },
+    "Downingtown": {
+      "Thorndale": 10.24,
+      "Whitford": 6.83
+    },
+    "Thorndale": {
+      "Downingtown": 4.09
+    },
+    "Temple University": {
+      "Jefferson": 6.0
+    },
+    "Jefferson": {
+      "Suburban": 5.0,
+      "Temple University": 4.91
+    }
+  },
+  "Trenton": {
+    "Suburban": {
+      "Gray 30th St": 5.0,
+      "Jefferson": 5.0
+    },
+    "Gray 30th St": {
+      "North Philadelphia Amtrak": 9.57,
+      "Suburban": 4.82,
+      "Holmesburg Junction": 20.0
+    },
+    "North Philadelphia Amtrak": {
+      "Bridesburg": 7.14,
+      "Gray 30th St": 10.02
+    },
+    "Bridesburg": {
+      "Tacony": 3.02,
+      "North Philadelphia Amtrak": 7.58
+    },
+    "Tacony": {
+      "Holmesburg Junction": 2.0,
+      "Bridesburg": 3.0
+    },
+    "Holmesburg Junction": {
+      "Torresdale": 3.07,
+      "Tacony": 2.09,
+      "Gray 30th St": 18.0
+    },
+    "Torresdale": {
+      "Cornwells Heights": 3.0,
+      "Holmesburg Junction": 4.0
+    },
+    "Cornwells Heights": {
+      "Croydon": 4.2,
+      "Torresdale": 2.98,
+      "Eddington": 2.05
+    },
+    "Croydon": {
+      "Bristol": 3.11,
+      "Eddington": 2.46,
+      "Cornwells Heights": 5.0
+    },
+    "Bristol": {
+      "Levittown": 5.04,
+      "Croydon": 3.0
+    },
+    "Levittown": {
+      "Trenton": 13.49,
+      "Bristol": 4.02
+    },
+    "Trenton": {
+      "Levittown": 7.69
+    },
+    "Eddington": {
+      "Cornwells Heights": 2.54,
+      "Croydon": 2.48
+    },
+    "Jefferson": {
+      "Suburban": 5.0,
+      "Temple University": 5.0
+    },
+    "Temple University": {
+      "Jefferson": 6.0
+    }
+  },
+  "Warminster": {
+    "Suburban": {
+      "Jefferson": 5.0,
+      "Gray 30th St": 4.6
+    },
+    "Jefferson": {
+      "Temple University": 4.89,
+      "Suburban": 2.29
+    },
+    "Temple University": {
+      "Wayne Junction": 5.98,
+      "Jefferson": 6.52,
+      "Fern Rock": 9.0
+    },
+    "Wayne Junction": {
+      "Fern Rock": 4.0,
+      "Temple University": 6.49
+    },
+    "Fern Rock": {
+      "Melrose Park": 2.0,
+      "Wayne Junction": 4.0,
+      "Temple University": 9.0,
+      "Jenkintown-Wyncote": 9.0
+    },
+    "Melrose Park": {
+      "Elkins Park": 2.0,
+      "Fern Rock": 3.94
+    },
+    "Elkins Park": {
+      "Jenkintown-Wyncote": 4.93,
+      "Melrose Park": 2.0
+    },
+    "Jenkintown-Wyncote": {
+      "Glenside": 4.0,
+      "Elkins Park": 2.08,
+      "Temple University": 19.0
+    },
+    "Glenside": {
+      "Jenkintown-Wyncote": 3.04,
+      "Ardsley": 4.0
+    },
+    "Ardsley": {
+      "Roslyn": 4.05,
+      "Glenside": 5.88
+    },
+    "Roslyn": {
+      "Crestmont": 3.0,
+      "Ardsley": 3.95
+    },
+    "Crestmont": {
+      "Willow Grove": 3.0,
+      "Roslyn": 2.98
+    },
+    "Willow Grove": {
+      "Hatboro": 4.11,
+      "Crestmont": 3.02
+    },
+    "Hatboro": {
+      "Warminster": 5.53,
+      "Willow Grove": 5.0
+    },
+    "Warminster": {
+      "Hatboro": 5.08
+    },
+    "Gray 30th St": {
+      "Suburban": 5.0
+    }
+  },
+  "West Trenton": {
+    "Suburban": {
+      "Jefferson": 5.0,
+      "Gray 30th St": 4.56
+    },
+    "Jefferson": {
+      "Temple University": 4.63,
+      "Suburban": 2.87
+    },
+    "Temple University": {
+      "Jenkintown-Wyncote": 14.33,
+      "Fern Rock": 8.11,
+      "Jefferson": 6.03
+    },
+    "Jenkintown-Wyncote": {
+      "Noble": 3.07,
+      "Fern Rock": 5.93,
+      "Elkins Park": 2.13
+    },
+    "Noble": {
+      "Rydal": 2.0,
+      "Jenkintown-Wyncote": 4.27
+    },
+    "Rydal": {
+      "Meadowbrook": 2.07,
+      "Noble": 2.3
+    },
+    "Meadowbrook": {
+      "Bethayres": 2.27,
+      "Rydal": 2.0
+    },
+    "Bethayres": {
+      "Philmont": 2.23,
+      "Meadowbrook": 2.53,
+      "Temple University": 25.0
+    },
+    "Philmont": {
+      "Forest Hills": 2.03,
+      "Bethayres": 2.42
+    },
+    "Forest Hills": {
+      "Somerton": 2.0,
+      "Philmont": 2.13
+    },
+    "Somerton": {
+      "Trevose": 3.1,
+      "Forest Hills": 2.23
+    },
+    "Trevose": {
+      "Neshaminy Falls": 3.5,
+      "Somerton": 3.06
+    },
+    "Neshaminy Falls": {
+      "Langhorne": 4.1,
+      "Trevose": 2.48
+    },
+    "Langhorne": {
+      "Woodbourne": 4.63,
+      "Neshaminy Falls": 4.03
+    },
+    "Woodbourne": {
+      "Yardley": 5.83,
+      "Langhorne": 3.84
+    },
+    "Yardley": {
+      "West Trenton": 6.47,
+      "Woodbourne": 5.45
+    },
+    "Fern Rock": {
+      "Melrose Park": 2.12,
+      "Temple University": 9.27,
+      "Jenkintown-Wyncote": 6.0
+    },
+    "Melrose Park": {
+      "Elkins Park": 2.06,
+      "Fern Rock": 2.2
+    },
+    "Elkins Park": {
+      "Jenkintown-Wyncote": 3.88,
+      "Melrose Park": 2.0
+    },
+    "West Trenton": {
+      "Yardley": 3.1
+    },
+    "Gray 30th St": {
+      "Suburban": 5.29
+    }
+  },
+  "Wilmington/Newark": {
+    "Newark De": {
+      "Churchman'S Crossing": 6.0
+    },
+    "Churchman'S Crossing": {
+      "Wilmington": 9.44,
+      "Newark De": 10.25
+    },
+    "Wilmington": {
+      "Claymont": 8.62,
+      "Churchman'S Crossing": 9.75
+    },
+    "Claymont": {
+      "Marcus Hook": 3.54,
+      "Wilmington": 13.14
+    },
+    "Marcus Hook": {
+      "Highland Avenue": 3.48,
+      "Claymont": 3.41
+    },
+    "Highland Avenue": {
+      "Chester T.C.": 3.03,
+      "Marcus Hook": 3.76
+    },
+    "Chester T.C.": {
+      "Crum Lynne": 3.5,
+      "Eddystone": 2.05,
+      "Highland Avenue": 3.12,
+      "Ridley Park": 5.0
+    },
+    "Crum Lynne": {
+      "Ridley Park": 1.96,
+      "Eddystone": 2.16,
+      "Chester T.C.": 3.25
+    },
+    "Ridley Park": {
+      "Prospect Park - Moore": 2.1,
+      "Crum Lynne": 2.17,
+      "Chester T.C.": 5.75
+    },
+    "Prospect Park - Moore": {
+      "Norwood": 1.77,
+      "Ridley Park": 2.06
+    },
+    "Norwood": {
+      "Glenolden": 2.21,
+      "Prospect Park - Moore": 1.69,
+      "Penn Medicine": 14.0
+    },
+    "Glenolden": {
+      "Folcroft": 1.96,
+      "Norwood": 2.07,
+      "Prospect Park - Moore": 4.0
+    },
+    "Folcroft": {
+      "Sharon Hill": 2.0,
+      "Glenolden": 1.66
+    },
+    "Sharon Hill": {
+      "Curtis Park": 1.64,
+      "Folcroft": 2.0,
+      "Glenolden": 3.0,
+      "Norwood": 5.0
+    },
+    "Curtis Park": {
+      "Darby": 1.96,
+      "Sharon Hill": 1.32
+    },
+    "Darby": {
+      "Penn Medicine": 10.11,
+      "Curtis Park": 2.03,
+      "Glenolden": 7.0
+    },
+    "Penn Medicine": {
+      "Gray 30th St": 3.0,
+      "Darby": 8.78,
+      "Norwood": 17.0
+    },
+    "Gray 30th St": {
+      "Suburban": 4.29,
+      "Penn Medicine": 3.06
+    },
+    "Eddystone": {
+      "Crum Lynne": 2.0,
+      "Chester T.C.": 2.24
+    },
+    "Suburban": {
+      "Gray 30th St": 4.76,
+      "Jefferson": 5.0
+    },
+    "Temple University": {
+      "Jefferson": 5.89
+    },
+    "Jefferson": {
+      "Suburban": 5.0,
+      "Temple University": 4.82
+    }
+  }
+}

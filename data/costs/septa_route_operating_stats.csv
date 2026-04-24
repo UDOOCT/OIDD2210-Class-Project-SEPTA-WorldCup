@@ -1,0 +1,67 @@
+﻿Type,Fiscal_Year,Allocation_Method,Division,Department,Headquarters__in__000s_,City_Transit__in__000s_,Victory__in__000s_,Frontier__in__000s_,Regional_Rail__in__000s_,ObjectId
+Budgeted,2023,Departmental,Operations,Rail Operations,-56,105431,38845,135,114317,1
+Budgeted,2023,Departmental,Operations,Bus Operations & Access,11644,263559,8631,21683,3,2
+Budgeted,2023,Departmental,Operations,"Administration, Finance And Support",4881,2094,56,0,459,3
+Budgeted,2023,Departmental,Operations,Bridges And Buildings,1374,86908,2669,10,7742,4
+Budgeted,2023,Departmental,Operations,Maintenance Of Way,69,43984,4808,0,26331,5
+Budgeted,2023,Departmental,Operations,Transit Police Department,37456,0,0,0,0,6
+Budgeted,2023,Departmental,Operations,Control Center,452,4417,377,0,4913,7
+Budgeted,2023,Departmental,Human Resources,,14454,4542,479,80,2859,8
+Budgeted,2023,Departmental,Finance,,57295,650,0,0,14952,9
+Budgeted,2023,Departmental,Office Of General Counsel Division,,44909,7521,301,181,2754,10
+Budgeted,2023,Departmental,Corporate Staff,,17652,0,0,0,73,11
+Budgeted,2023,Departmental,System Safety,,3131,0,0,0,0,12
+Budgeted,2023,Departmental,Office Of Inspector General,,2738,0,0,0,0,13
+Budgeted,2023,Departmental,Planning & Strategy,,14164,3,5,0,1002,14
+Budgeted,2023,Departmental,Equity & Inclusion,,1340,35,0,0,0,15
+Budgeted,2023,Departmental,Capital Labor Allocation/Rental Reclassification,,-32057,-29209,-289,-100,-7458,16
+Budgeted,2023,Departmental,Headquarters Allocation,,-179446,133095,11790,3786,30775,17
+Budgeted,2023,Non-Departmental,Fringe Benefits,,61836,235861,22036,9609,70730,18
+Budgeted,2023,Non-Departmental,Amtrak,,0,0,0,0,55765,19
+Budgeted,2023,Non-Departmental,CCT - ADA Services,,0,13506,10931,0,0,20
+Budgeted,2023,Non-Departmental,CCT - Shared Ride Program,,0,16521,0,0,0,21
+Budgeted,2023,Non-Departmental,Debt Service Interest and Fees,,200,11675,183,63,21220,22
+Budgeted,2023,Non-Departmental,"Property Insurance/Other Claims Payouts, Net",,0,5848,562,131,1944,23
+Budgeted,2023,Non-Departmental,Services for Headquarters' Building,,6282,0,0,0,0,24
+Budgeted,2023,Non-Departmental,Snow Removal and Other Weather Related Expenses,,0,0,0,0,5650,25
+Budgeted,2023,Non-Departmental,Utilities,,0,14149,1189,290,6640,26
+Budgeted,2023,Non-Departmental,Capitalized Costs and Other,,-9326,4856,414,139,712,27
+Budgeted,2023,Non-Departmental,Headquarters Allocation,,-58992,43754,3876,1245,10117,28
+Budgeted,2023,Other,Injury and Damage Claims,,0,13163,1147,378,14107,29
+Budgeted,2023,Other,Propulsion Power,,0,13033,1508,0,18297,30
+Budgeted,2023,Other,Fuel,,0,23674,4380,2946,626,31
+Budgeted,2023,Other,Vehicle and Facility Rentals,,0,6290,241,77,1592,32
+Budgeted,2023,Other,Depreciation/Contributed Capital,,0,15908,278,63,8011,33
+Budgeted,2024,Departmental,Operations,Rail Operations,12,110418,40248,139,113291,34
+Budgeted,2024,Departmental,Operations,Bus Operations & Access,10651,267504,9128,19594,3,35
+Budgeted,2024,Departmental,Operations,"Administration, Finance And Support",9233,7906,74,0,11046,36
+Budgeted,2024,Departmental,Operations,Bridges And Buildings,1243,89307,3007,0,8385,37
+Budgeted,2024,Departmental,Operations,Maintenance Of Way,24,38419,5423,0,22549,38
+Budgeted,2024,Departmental,Operations,Transit Police Department,33408,0,0,0,0,39
+Budgeted,2024,Departmental,Operations,Control Center,493,4615,388,0,4848,40
+Budgeted,2024,Departmental,Human Resources,,15768,4681,498,83,2654,41
+Budgeted,2024,Departmental,Finance,,58602,645,0,0,14999,42
+Budgeted,2024,Departmental,Office Of General Counsel Division,,35934,8284,319,200,2730,43
+Budgeted,2024,Departmental,Corporate Staff,,18862,0,0,0,86,44
+Budgeted,2024,Departmental,System Safety,,3559,0,0,0,127,45
+Budgeted,2024,Departmental,Office Of Inspector General,,2976,0,0,0,0,46
+Budgeted,2024,Departmental,Planning & Strategy,,12389,245,247,0,1003,47
+Budgeted,2024,Departmental,Equity & Inclusion,,1528,3,0,0,0,48
+Budgeted,2024,Departmental,Capital Labor Allocation/Rental Reclassification,,-35282,-3723,-357,-44,-1464,49
+Budgeted,2024,Departmental,Headquarters Allocation,,-169400,125644,11130,3574,29052,50
+Budgeted,2024,Non-Departmental,Fringe Benefits,,65695,239034,22333,9703,75686,51
+Budgeted,2024,Non-Departmental,Amtrak,,0,0,0,0,59100,52
+Budgeted,2024,Non-Departmental,CCT - ADA Services,,0,15042,12245,0,0,53
+Budgeted,2024,Non-Departmental,CCT - Shared Ride Program,,0,18587,0,0,0,54
+Budgeted,2024,Non-Departmental,Debt Service Interest and Fees,,1974,10616,141,50,19880,55
+Budgeted,2024,Non-Departmental,"Property Insurance/Other Claims Payouts, Net",,4496,1872,229,33,1047,56
+Budgeted,2024,Non-Departmental,Services for Headquarters' Building,,6195,0,0,0,0,57
+Budgeted,2024,Non-Departmental,Snow Removal and Other Weather Related Expenses,,0,0,0,0,5650,58
+Budgeted,2024,Non-Departmental,Utilities,,13427,10347,1009,224,6503,59
+Budgeted,2024,Non-Departmental,Capitalized Costs and Other,,-3075,219,3,7,-359,60
+Budgeted,2024,Non-Departmental,Headquarters Allocation,,-88712,65798,5828,1873,15213,61
+Budgeted,2024,Other,Injury and Damage Claims,,0,13162,1147,377,13653,62
+Budgeted,2024,Other,Propulsion Power,,0,17419,1996,0,20188,63
+Budgeted,2024,Other,Fuel,,0,23515,4365,2939,617,64
+Budgeted,2024,Other,Vehicle and Facility Rentals,,0,3156,309,21,1246,65
+Budgeted,2024,Other,Depreciation/Contributed Capital,,0,17659,384,85,8588,66

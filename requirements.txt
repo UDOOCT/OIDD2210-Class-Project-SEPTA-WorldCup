@@ -1,0 +1,8 @@
+numpy>=1.24
+scipy>=1.11
+networkx>=3.1
+pandas>=2.0
+matplotlib>=3.7
+optuna>=3.3
+# pulp>=2.7        # uncomment for ILP solver
+# gurobipy>=10.0   # uncomment if Gurobi license available

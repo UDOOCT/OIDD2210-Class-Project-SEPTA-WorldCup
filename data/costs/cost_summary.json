@@ -1,0 +1,10 @@
+{
+  "fiscal_year": 2024,
+  "total_rr_operating_cost_usd": 427733000,
+  "fixed_cost_per_train_trip": 13535.85,
+  "variable_cost_per_pax": 34.03,
+  "annual_train_trips_estimated": 31600,
+  "annual_weekday_boardings_estimated": 12569180,
+  "notes": "All-in cash operating cost (excludes depreciation). Per-trip derived from GTFS weekday trips \u00d7 calendar service days. Per-pax derived from 2024 ridership snapshot \u00d7 260 weekdays.",
+  "source": "SEPTA Route Operating Statistics FY2024 Budgeted \u2014 https://opendata.arcgis.com/datasets/26f40aaeb8ae41d291878ba726b57fed_0.csv"
+}
